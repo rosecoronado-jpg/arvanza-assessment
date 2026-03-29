@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arvanza Work Style Assessment</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #0d0d18; min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
+  .app { background: #13131f; border-radius: 20px; max-width: 660px; width: 100%; padding: 2.5rem; border: 1px solid #22223a; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* INTRO */
+  .hero { text-align: center; padding: 1rem 0 1.5rem; }
+  .hero-logo { width: 60px; height: 60px; background: linear-gradient(135deg, #5B6EE8, #3DC8D8); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+  .hero-logo svg { width: 30px; height: 30px; fill: white; }
+  .hero h1 { font-family: 'DM Serif Display', serif; font-size: 34px; color: #ffffff; margin-bottom: 0.75rem; letter-spacing: -0.01em; }
+  .hero p { font-size: 16px; color: #aaaacc; line-height: 1.7; max-width: 420px; margin: 0 auto 2rem; }
+  .info-row { display: flex; justify-content: center; gap: 40px; margin-bottom: 2rem; }
+  .info-item .num { font-size: 32px; font-weight: 600; color: #3DC8D8; text-align: center; }
+  .info-item .lbl { font-size: 13px; color: #7777aa; margin-top: 4px; text-align: center; letter-spacing: 0.04em; }
+
+  /* NAME FIELD */
+  .name-field { margin-bottom: 1.5rem; }
+  .name-field label { display: block; font-size: 15px; color: #bbbbdd; margin-bottom: 8px; font-weight: 500; letter-spacing: 0.02em; }
+  .name-field input { width: 100%; padding: 14px 16px; border: 1.5px solid #22223a; border-radius: 10px; font-size: 16px; font-family: 'DM Sans', sans-serif; color: #ffffff; background: #1c1c2e; outline: none; transition: border 0.2s; }
+  .name-field input:focus { border-color: #5B6EE8; background: #1e1e33; }
+  .name-field input::placeholder { color: #3a3a55; }
+
+  .btn-start { display: block; width: 100%; max-width: 300px; margin: 0 auto; padding: 15px; background: linear-gradient(135deg, #5B6EE8, #3DC8D8); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; letter-spacing: 0.01em; }
+  .btn-start:hover { opacity: 0.88; }
+  .note { font-size: 12px; color: #3a3a55; margin-top: 1.25rem; line-height: 1.6; text-align: center; }
+
+  /* PROGRESS */
+  .phase-bar { display: flex; gap: 4px; margin-bottom: 1.5rem; }
+  .phase-seg { height: 4px; flex: 1; border-radius: 99px; background: #22223a; transition: background 0.3s; }
+  .phase-seg.done { background: #3DC8D8; }
+  .phase-seg.active { background: linear-gradient(90deg, #5B6EE8, #3DC8D8); }
+
+  /* QUESTIONS */
+  .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+  .q-tag { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; }
+  .q-tag.style { background: rgba(61,200,216,0.15); color: #3DC8D8; border: 1px solid rgba(61,200,216,0.2); }
+  .q-tag.culture { background: rgba(91,110,232,0.15); color: #8899ff; border: 1px solid rgba(91,110,232,0.2); }
+  .q-count { font-size: 13px; color: #7777aa; font-weight: 500; }
+  .q-instruction { font-size: 17px; color: #ffffff; line-height: 1.6; margin: 1rem 0 1.5rem; font-weight: 400; }
+  .words-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+  .word-btn { padding: 15px 18px; border: 1.5px solid #22223a; border-radius: 10px; background: #1c1c2e; color: #e0e0f5; font-size: 16px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.18s; text-align: left; line-height: 1.45; }
+  .word-btn:hover { border-color: #5B6EE8; background: rgba(91,110,232,0.1); color: #ffffff; }
+  .word-btn.selected { border-color: #3DC8D8; background: rgba(61,200,216,0.12); color: #ffffff; font-weight: 500; }
+  .nav-row { display: flex; gap: 12px; }
+  .btn-next { flex: 1; padding: 14px; background: linear-gradient(135deg, #5B6EE8, #3DC8D8); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; letter-spacing: 0.01em; }
+  .btn-next:disabled { opacity: 0.2; cursor: not-allowed; }
+  .btn-next:not(:disabled):hover { opacity: 0.88; }
+  .btn-back { padding: 14px 22px; background: transparent; border: 1.5px solid #22223a; border-radius: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 15px; color: #55557a; transition: all 0.18s; }
+  .btn-back:hover { background: #1c1c2e; color: #9999bb; border-color: #33335a; }
+
+  /* THANK YOU */
+  .thankyou { text-align: center; padding: 3.5rem 1rem; }
+  .thankyou-icon { width: 72px; height: 72px; background: linear-gradient(135deg, rgba(91,110,232,0.2), rgba(61,200,216,0.2)); border: 1.5px solid rgba(61,200,216,0.4); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; }
+  .thankyou-icon svg { width: 34px; height: 34px; fill: #3DC8D8; }
+  .thankyou h2 { font-family: 'DM Serif Display', serif; font-size: 28px; color: #ffffff; margin-bottom: 1rem; }
+  .thankyou p { font-size: 15px; color: #9999bb; line-height: 1.7; max-width: 380px; margin: 0 auto; }
+
+  /* DIVIDER */
+  .section-divider { height: 1px; background: #22223a; margin: 1.5rem 0; }
+
+  @media (max-width: 520px) {
+    .words-grid { grid-template-columns: 1fr; }
+    .app { padding: 1.5rem; border-radius: 14px; }
+    .hero h1 { font-size: 26px; }
+    .q-instruction { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- INTRO -->
+  <div class="screen active" id="s-intro">
+    <div class="hero">
+      <div class="hero-logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15v-4H7l5-8v4h3l-5 8z"/></svg>
+      </div>
+      <h1>Work Style Assessment</h1>
+      <p>Two quick sections: first pick the words that feel most like you, then tell us how you would handle a few real situations. No right or wrong answers.</p>
+      <div class="info-row">
+        <div class="info-item"><div class="num">20</div><div class="lbl">questions</div></div>
+        <div class="info-item"><div class="num">~5</div><div class="lbl">minutes</div></div>
+        <div class="info-item"><div class="num">1</div><div class="lbl">profile</div></div>
+      </div>
+      <div class="name-field" style="max-width:320px;margin:0 auto 1.25rem;">
+        <label>Your full name</label>
+        <input type="text" id="candidate-name" placeholder="e.g. Amanda Johnson" />
+      </div>
+      <button class="btn-start" onclick="start()">Begin</button>
+      <p class="note">Your responses are shared with the Arvanza hiring team.</p>
+    </div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div class="screen" id="s-questions">
+    <div class="phase-bar" id="phase-bar"></div>
+    <div class="q-header">
+      <span id="q-tag-el" class="q-tag"></span>
+      <span class="q-count" id="q-count"></span>
+    </div>
+    <div class="q-instruction" id="q-instr"></div>
+    <div class="words-grid" id="q-words"></div>
+    <div class="nav-row">
+      <button class="btn-back" id="btn-back" onclick="prev()">Back</button>
+      <button class="btn-next" id="btn-next" onclick="next()" disabled>Next</button>
+    </div>
+  </div>
+
+  <!-- THANK YOU -->
+  <div class="screen" id="s-thankyou">
+    <div class="thankyou">
+      <div class="thankyou-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+      </div>
+      <h2>You're all done!</h2>
+      <p>Thank you for completing the assessment. Your responses have been submitted and the team will be in touch with next steps shortly.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const EMAILJS_PUBLIC_KEY  = 'DGsz_kYGrrD7CSqe7';
+const EMAILJS_SERVICE_ID  = 'service_82y79rz';
+const EMAILJS_TEMPLATE_ID = 'template_8uki4jg';
+const RECIPIENT_EMAIL     = 'rose@arvanzaconsulting.com';
+
+const styleQs = [
+  {instr:"Which word feels most like you at work?", words:[{w:"Decisive",s:{D:3}},{w:"Enthusiastic",s:{I:3}},{w:"Patient",s:{S:3}},{w:"Precise",s:{C:3}}]},
+  {instr:"When working on something new, you are most:", words:[{w:"Driven",s:{D:3}},{w:"Creative",s:{I:3}},{w:"Dependable",s:{S:3}},{w:"Methodical",s:{C:3}}]},
+  {instr:"Others would describe you as:", words:[{w:"Bold",s:{D:3}},{w:"Inspiring",s:{I:3}},{w:"Warm",s:{S:3}},{w:"Careful",s:{C:3}}]},
+  {instr:"Under pressure, you tend to be:", words:[{w:"Assertive",s:{D:3}},{w:"Optimistic",s:{I:3}},{w:"Calm",s:{S:3}},{w:"Analytical",s:{C:3}}]},
+  {instr:"In a team, you naturally play the role of:", words:[{w:"Leader",s:{D:3}},{w:"Motivator",s:{I:3}},{w:"Supporter",s:{S:3}},{w:"Organizer",s:{C:3}}]},
+  {instr:"Your communication style is best described as:", words:[{w:"Direct",s:{D:3}},{w:"Expressive",s:{I:3}},{w:"Diplomatic",s:{S:3}},{w:"Precise",s:{C:3}}]},
+  {instr:"At your best, you are:", words:[{w:"Confident",s:{D:3}},{w:"Energizing",s:{I:3}},{w:"Reliable",s:{S:3}},{w:"Accurate",s:{C:3}}]},
+  {instr:"What drives you most at work?", words:[{w:"Results",s:{D:3}},{w:"Recognition",s:{I:3}},{w:"Harmony",s:{S:3}},{w:"Quality",s:{C:3}}]},
+  {instr:"When something goes wrong, you are most:", words:[{w:"Focused",s:{D:3}},{w:"Resilient",s:{I:3}},{w:"Steady",s:{S:3}},{w:"Logical",s:{C:3}}]},
+  {instr:"How do you prefer to make decisions?", words:[{w:"Fast",s:{D:3}},{w:"Instinctively",s:{I:3}},{w:"Thoughtfully",s:{S:3}},{w:"Thoroughly",s:{C:3}}]},
+  {instr:"Your plate is completely full and a new urgent task lands. You:", words:[
+    {w:"Reprioritize immediately and get it done",s:{D:3}},
+    {w:"Flag it to your manager and ask what to drop",s:{S:2,C:1}},
+    {w:"Add it to the list and work longer to fit it in",s:{S:3}},
+    {w:"Assess the impact first before deciding how to handle it",s:{C:3}}
+  ]},
+  {instr:"When you are assigned something you have never done before, you:", words:[
+    {w:"Jump in and figure it out as you go",s:{D:3}},
+    {w:"Ask for a quick overview then run with it",s:{I:2,D:1}},
+    {w:"Research thoroughly before taking the first step",s:{C:3}},
+    {w:"Look for someone who has done it before and learn from them",s:{S:3}}
+  ]},
+  {instr:"When you have an idea you believe in but others push back, you:", words:[
+    {w:"Stand your ground and make the case with data",s:{D:3}},
+    {w:"Try to get others excited about it",s:{I:3}},
+    {w:"Listen carefully and adjust if their points are valid",s:{S:3}},
+    {w:"Go back and stress-test your own thinking first",s:{C:3}}
+  ]}
+];
+
+const cultureQs = [
+  {instr:"A client calls and asks for their month-to-date revenue and current TACoS. You:", words:[
+    {w:"Answer confidently — you know these numbers daily",cf:3},
+    {w:"Pull up the dashboard quickly and walk them through it",cf:2},
+    {w:"Let them know you'll send a report shortly",cf:1},
+    {w:"Ask your manager to jump on the call",cf:0}
+  ]},
+  {instr:"You notice a top SKU's conversion rate has been quietly declining for two weeks. You:", words:[
+    {w:"Dig into the root cause and bring a fix before anyone asks",cf:3},
+    {w:"Flag it to your manager and wait for direction",cf:0},
+    {w:"Add it to the weekly recap to discuss",cf:1},
+    {w:"Wait to see if it affects sales before acting",cf:0}
+  ]},
+  {instr:"A client asks why their sales dropped last week. You don't have the full picture yet. You:", words:[
+    {w:"Tell them you'll look into it and follow up with a clear answer shortly",cf:3},
+    {w:"Give a general response about market conditions while you dig in",cf:1},
+    {w:"Escalate it to your manager to handle",cf:0},
+    {w:"Guess based on what you know and clarify later",cf:0}
+  ]},
+  {instr:"You're assigned a new client account with no handoff notes. You:", words:[
+    {w:"Audit the account yourself, build your own overview, and hit the ground running",cf:3},
+    {w:"Ask lots of questions before touching anything",cf:1},
+    {w:"Do what you can and flag that you need more support",cf:2},
+    {w:"Wait for a proper onboarding before taking action",cf:0}
+  ]},
+  {instr:"Your manager tells you your client communication needs to be more confident and direct. You:", words:[
+    {w:"Ask for a specific example, adjust immediately, and share the next update for feedback",cf:3},
+    {w:"Rework your style based on the feedback and move forward",cf:2},
+    {w:"Feel unsure about what to change but try your best",cf:1},
+    {w:"Feel discouraged — you thought you were doing well",cf:0}
+  ]},
+  {instr:"A campaign you manage has been overspending for three days without moving the needle. You:", words:[
+    {w:"Identify what's wrong, make the adjustment, and document what you changed and why",cf:3},
+    {w:"Pause the campaign and flag it to your manager",cf:1},
+    {w:"Increase bids to try to improve performance",cf:0},
+    {w:"Leave it running and monitor for another few days",cf:0}
+  ]},
+  {instr:"The strategy you've been executing for a client isn't working. Results are flat. You:", words:[
+    {w:"Reassess the data, form a new hypothesis, and bring a revised plan",cf:3},
+    {w:"Flag it to your manager and ask for a new direction",cf:1},
+    {w:"Stay the course — it may take more time to show results",cf:0},
+    {w:"Wait for the client to bring it up before pivoting",cf:0}
+  ]}
+];
+
+const allQs = [...styleQs.map(q=>({...q,phase:'style'})),...cultureQs.map(q=>({...q,phase:'culture'}))];
+const answers = new Array(allQs.length).fill(null);
+let cur = 0;
+let candidateName = '';
+
+function start() {
+  const nameInput = document.getElementById('candidate-name').value.trim();
+  if(!nameInput) { document.getElementById('candidate-name').focus(); document.getElementById('candidate-name').style.borderColor='#D85A30'; return; }
+  candidateName = nameInput;
+  document.getElementById('s-intro').classList.remove('active');
+  document.getElementById('s-questions').classList.add('active');
+  render();
+}
+
+function buildPhaseBar() {
+  const bar = document.getElementById('phase-bar');
+  bar.innerHTML = '';
+  allQs.forEach((_,i) => {
+    const seg = document.createElement('div');
+    seg.className = 'phase-seg'+(i<cur?' done':i===cur?' active':'');
+    bar.appendChild(seg);
+  });
+}
+
+function getShuffledIndices(numWords, questionIdx) {
+  const indices = [];
+  for (let i = 0; i < numWords; i++) indices.push(i);
+  let seed = (questionIdx + 1) * 2654435761;
+  for (let i = indices.length - 1; i > 0; i--) {
+    seed = (seed ^ (seed >>> 16)) * 2246822519 & 0xffffffff;
+    seed = (seed ^ (seed >>> 13)) * 3266489917 & 0xffffffff;
+    seed = seed ^ (seed >>> 16);
+    const j = Math.abs(seed) % (i + 1);
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  return indices;
+}
+
+function render() {
+  buildPhaseBar();
+  const q = allQs[cur];
+  const tagEl = document.getElementById('q-tag-el');
+  tagEl.className = 'q-tag '+(q.phase==='style'?'style':'culture');
+  tagEl.textContent = q.phase==='style'?'Work style':'Culture fit';
+  document.getElementById('q-count').textContent = (cur+1)+' of '+allQs.length;
+  document.getElementById('q-instr').textContent = q.instr;
+  const grid = document.getElementById('q-words');
+  grid.innerHTML = '';
+  const displayOrder = getShuffledIndices(q.words.length, cur);
+  displayOrder.forEach((origIdx) => {
+    const w = q.words[origIdx];
+    const b = document.createElement('button');
+    b.className = 'word-btn' + (answers[cur] === origIdx ? ' selected' : '');
+    b.textContent = w.w;
+    b.dataset.origIdx = origIdx;
+    b.addEventListener('click', function() {
+      pick(parseInt(this.dataset.origIdx));
+    });
+    grid.appendChild(b);
+  });
+  document.getElementById('btn-next').disabled = answers[cur] === null;
+  document.getElementById('btn-next').textContent = cur === allQs.length - 1 ? 'Submit' : 'Next';
+  document.getElementById('btn-back').style.display = cur === 0 ? 'none' : 'block';
+}
+
+function pick(origIdx) {
+  answers[cur] = origIdx;
+  document.querySelectorAll('.word-btn').forEach((b) => {
+    b.className = 'word-btn' + (parseInt(b.dataset.origIdx) === origIdx ? ' selected' : '');
+  });
+  document.getElementById('btn-next').disabled = false;
+}
+
+function next() {
+  if(answers[cur]===null) return;
+  if(cur<allQs.length-1){cur++;render();}
+  else submitResults();
+}
+
+function prev() { if(cur>0){cur--;render();} }
+
+function submitResults() {
+  const sc={D:0,I:0,S:0,C:0};
+  let cfScore=0, cfMax=0;
+
+  styleQs.forEach((q,i)=>{
+    const a=answers[i];
+    if(a!==null&&q.words[a]) Object.entries(q.words[a].s).forEach(([k,v])=>{if(sc[k]!==undefined)sc[k]+=v;});
+  });
+  cultureQs.forEach((q,i)=>{
+    const a=answers[styleQs.length+i];
+    if(a!==null&&q.words[a]){cfScore+=q.words[a].cf;cfMax+=3;}
+  });
+
+  const total=sc.D+sc.I+sc.S+sc.C||1;
+  const pD=Math.round((sc.D/total)*100), pI=Math.round((sc.I/total)*100);
+  const pS=Math.round((sc.S/total)*100), pC=Math.round((sc.C/total)*100);
+  const cfPct=Math.round((cfScore/cfMax)*100);
+  const rawMax = Math.max(sc.D, sc.I, sc.S, sc.C);
+  const tiedStyles = ['D','I','S','C'].filter(k => sc[k] === rawMax);
+  const dominant = tiedStyles[0];
+  const isTied = tiedStyles.length > 1;
+
+  const profiles={
+    D:{
+      name:'The Driver',
+      summary:'This candidate is results-first, decisive, and wired for ownership. They move fast, speak directly, and do not wait for permission to take action. At Arvanza, they will likely hit the ground running, take on client accounts with confidence, and push for measurable outcomes from day one. Their biggest risk is moving too fast without alignment, but with the right direction, they are exactly the type of operator Arvanza is built around.',
+      strengths:'Results-oriented, Confident and decisive, Takes initiative without being asked, Comfortable with high-stakes client work',
+      watch:'May move faster than the team can follow, Communication can come across as blunt, Needs autonomy and space to operate, micromanagement will disengage them quickly',
+      env:'Fast-moving environments where they own outcomes and are trusted to lead without needing constant direction.',
+      manage:'Set clear goals, define the guardrails, and get out of the way. Recognize results publicly and challenge them consistently.',
+      green_flags:'Takes ownership without being asked | Speaks confidently about strategy | Brings solutions not just problems | Asks about growth path and KPIs',
+      red_flags:'Talks over others or dismisses team input | Cannot explain the reasoning behind decisions | Defensive when challenged | Needs constant validation',
+      interview:'1. Walk me through a time you caught a performance issue before anyone else did. What did you do?\n\n2. Tell me about a client situation that went wrong. How did you handle it and what did you do differently after?\n\n3. You disagree with a strategy your manager wants to run. What do you do?\n\n4. How do you decide what to prioritize when everything feels urgent?'
+    },
+    I:{
+      name:'The Influencer',
+      summary:'This candidate brings energy, optimism, and a natural ability to connect with people. They are the type of person who lifts a team and builds strong client relationships quickly. At Arvanza, they will excel at client communication and team collaboration. The risk is that their enthusiasm can outpace their depth. They need to be pushed to stay close to the data and not coast on charm alone.',
+      strengths:'Natural communicator, Energizes the team and clients, Optimistic and resilient under pressure, Builds trust and rapport quickly',
+      watch:'Needs variety to stay engaged, repetitive work will drain them, May oversimplify complex data situations, Can get distracted by new ideas before finishing current priorities',
+      env:'Collaborative, high-energy environments where they can communicate, present, and have visible client impact.',
+      manage:'Keep them motivated with recognition and creative freedom. Hold them accountable to data depth and follow-through.',
+      green_flags:'Asks about team culture and collaboration | Shows genuine enthusiasm for client outcomes | Can explain data clearly and confidently | Demonstrates follow-through on past projects',
+      red_flags:'Focuses on relationships but cannot back up strategy with data | Talks a lot but lacks specific examples | Gets vague when asked about numbers | Cannot describe a time they pushed through something difficult',
+      interview:'1. Tell me about a time a client was frustrated. How did you turn it around?\n\n2. Walk me through how you stay on top of account performance across multiple clients.\n\n3. Give me an example of a time your instinct told you one thing but the data told you another. What did you do?\n\n4. How do you handle a week where everything is due at the same time?'
+    },
+    S:{
+      name:'The Steady',
+      summary:'This candidate is dependable, consistent, and deeply team-oriented. They create stability and are the kind of person colleagues and clients rely on. At Arvanza, they will be a strong long-term team member who builds deep client trust over time. The risk is that they may be slow to flag issues, avoid difficult conversations, and need more structure than Arvanza typically provides. They will need to be coached into proactive ownership.',
+      strengths:'Highly dependable and consistent, Strong emotional intelligence, Excellent collaborator who lifts others, Calm and steady under pressure',
+      watch:'May avoid flagging bad news to clients or leadership, Takes longer to adapt when strategy changes quickly, Can over-extend themselves trying to support everyone',
+      env:'Structured environments with clear expectations, strong team culture, and consistent feedback loops.',
+      manage:'Provide regular check-ins, be explicit about expectations, and coach them toward proactive communication and ownership.',
+      green_flags:'Gives specific examples of going above and beyond for a client | Shows genuine care for team outcomes | Can describe a time they delivered difficult news well | Demonstrates consistency over time',
+      red_flags:'Struggles to give a direct answer when asked what they would do differently | Avoids conflict even when pressed | Cannot describe a time they took initiative without being asked | Relies heavily on manager direction',
+      interview:'1. Tell me about a time you had to deliver bad news to a client. How did you handle it?\n\n2. Describe a situation where the strategy was not working. What did you do and when?\n\n3. How do you manage your own workload when no one is checking in?\n\n4. What does ownership mean to you in a client-facing role?'
+    },
+    C:{
+      name:'The Analyst',
+      summary:'This candidate is precise, methodical, and standards-driven. They take pride in accuracy and bring a level of rigor that raises the bar on everything they touch. At Arvanza, they will produce excellent data-backed work and catch things others miss. The risk is pace and ambiguity. They may slow down when the playbook changes, hesitate without full information, and struggle to project confidence to clients in real time.',
+      strengths:'Highly detail-oriented with strong data instincts, Logical and methodical in how they approach problems, Sets a high quality bar on all deliverables, Reliable and thorough, rarely lets things slip',
+      watch:'May hesitate when asked to move fast without full information, Can struggle to project confidence to clients in ambiguous situations, Needs time to trust new processes or tools',
+      env:'Structured environments with clear processes, defined KPIs, and space to do thorough work.',
+      manage:'Give them time to think before deciding. Build their confidence in communicating findings directly. Push them on pace and client presence.',
+      green_flags:'Walks through their thinking step by step with clarity | References specific data points and metrics naturally | Asks smart process questions | Shows a track record of catching issues others missed',
+      red_flags:'Cannot explain findings without hedging excessively | Gets stuck when asked a hypothetical | Slow to commit to a recommendation even with sufficient data | Shows discomfort with fast-moving client scenarios',
+      interview:'1. Walk me through how you audit an account when you are first assigned to it.\n\n2. A client asks you a performance question and you are not 100% sure of the answer. What do you say?\n\n3. Tell me about a time you identified a problem in data that no one else had caught. What did you do with it?\n\n4. How do you balance being thorough with moving quickly when a client needs an answer now?'
+    }
+  };
+
+  const prof=profiles[dominant];
+  let cfLabel;
+  if(cfPct>=75){cfLabel='Strong culture fit signal';}
+  else if(cfPct>=50){cfLabel='Moderate fit, worth exploring';}
+  else{cfLabel='Culture fit risk, probe further';}
+
+  const overallStrong = cfPct >= 75;
+  const overallMaybe = cfPct >= 50;
+  const recTitle = overallStrong ? 'Strong overall candidate signal' : overallMaybe ? 'Promising, worth a deeper conversation' : 'Proceed with caution';
+
+  document.getElementById('s-questions').classList.remove('active');
+  document.getElementById('s-thankyou').classList.add('active');
+  window.scrollTo(0,0);
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    candidate_name: candidateName,
+    profile_name: isTied ? prof.name + ' (Blended Style)' : prof.name,
+    profile_summary: prof.summary,
+    style_scores: 'Driver: ' + pD + '% | Influencer: ' + pI + '% | Steady: ' + pS + '% | Analyst: ' + pC + '%',
+    culture_fit: cfPct + '%',
+    cf_label: cfLabel,
+    strengths: prof.strengths,
+    watch: prof.watch,
+    green_flags: prof.green_flags.replace(/ \| /g, '\n'),
+    red_flags: prof.red_flags.replace(/ \| /g, '\n'),
+    env: prof.env,
+    manage: prof.manage,
+    interview_questions: prof.interview,
+    recommendation: recTitle
+  }).then(function(response) {
+    console.log('Email sent!', response.status, response.text);
+  }, function(error) {
+    console.error('Email failed:', JSON.stringify(error));
+    alert('Submission error, please screenshot this: ' + JSON.stringify(error));
+  });
+}
+</script>
+</body>
+</html>
