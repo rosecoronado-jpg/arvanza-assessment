@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Tooth | PPC Audit Dashboard | March 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0f1117;color:#fff;font-family:'Inter',sans-serif;font-size:14px;line-height:1.5;}
+.header{background:linear-gradient(135deg,#1a1d27,#16192a);border-bottom:1px solid #2a2d3e;padding:20px 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+.header h1{font-size:22px;font-weight:700;}
+.header p{font-size:15px;color:#8b8fa8;margin-top:4px;}
+.sale-banner{background:#f59e0b10;border-bottom:1px solid #f59e0b30;padding:10px 32px;font-size:15px;color:#c5c7d4;}
+.toggle-wrap{display:flex;background:#0f1117;border:1px solid #2a2d3e;border-radius:30px;padding:4px;}
+.toggle-btn{padding:8px 20px;border-radius:24px;font-size:14px;font-weight:600;min-width:160px;white-space:normal;cursor:pointer;border:none;transition:all .2s;}
+.toggle-btn.active{background:#6c63ff;color:#fff;}
+.toggle-btn:not(.active){background:transparent;color:#8b8fa8;}
+.con{padding:22px 32px;max-width:1600px;margin:0 auto;}
+.qs{background:linear-gradient(135deg,#1e1b4b,#1a1d27);border:1px solid #6c63ff44;border-radius:14px;padding:26px 30px;margin-bottom:22px;}
+.qs-label{font-size:15px;font-weight:700;color:#6c63ff;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:12px;}
+.qs-text{font-size:15px;line-height:1.85;color:#d4d6e8;}
+.qs-text strong{color:#fff;}
+.qs-pills{display:flex;gap:9px;margin-top:16px;flex-wrap:wrap;}
+.qp{background:#ffffff0c;border:1px solid #ffffff15;border-radius:8px;padding:8px 14px;font-size:14px;color:#9ca3af;}
+.qp b{color:#fff;}
+.qp.g b{color:#22c55e;}
+.qp.y b{color:#f59e0b;}
+.scorecard{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:22px;}
+.sc{background:#1a1d27;border-radius:11px;padding:16px;border:1px solid #2a2d3e;overflow:hidden;position:relative;}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.sc.g::before{background:#22c55e;}
+.sc.y::before{background:#f59e0b;}
+.sc.r::before{background:#ef4444;}
+.sc .l{font-size:15px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+.sc .v{font-size:22px;font-weight:700;}
+.sc .s{font-size:15px;margin-top:5px;}
+.sc.g .s{color:#22c55e;}
+.sc.y .s{color:#f59e0b;}
+.sc.r .s{color:#ef4444;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px;}
+.card{background:#1a1d27;border-radius:12px;border:1px solid #2a2d3e;padding:22px;}
+.card h3{font-size:15px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.7px;margin-bottom:16px;}
+.hw{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid #2a2d3e;border-radius:12px;overflow:hidden;margin-bottom:22px;}
+.hwc{padding:22px;}
+.hwc:first-child{border-right:1px solid #2a2d3e;background:#1a1d27;}
+.hwc:last-child{background:#16192a;}
+.hwc h3{font-size:15px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.7px;margin-bottom:16px;}
+.hwi{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #2a2d3e20;}
+.hwi:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.hwa{font-size:14px;font-weight:600;min-width:160px;white-space:normal;color:#e5e7eb;margin-bottom:4px;}
+.hww{font-size:14px;color:#9ca3af;line-height:1.6;}
+.htag{display:inline-block;font-size:14px;font-weight:700;padding:2px 8px;border-radius:4px;margin-right:5px;text-transform:uppercase;}
+.tl{background:#22c55e20;color:#22c55e;}
+.tw{background:#f59e0b20;color:#f59e0b;}
+table{width:100%;border-collapse:collapse;font-size:15px;}
+th{text-align:left;padding:10px 13px;color:#6b7280;font-weight:600;border-bottom:1px solid #2a2d3e;font-size:15px;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;}
+td{padding:10px 13px;border-bottom:1px solid #1f2235;vertical-align:middle;white-space:nowrap;}
+tr:hover td{background:#1f2235;}
+tr:last-child td{border-bottom:none;}
+.pill{display:inline-block;padding:3px 9px;border-radius:7px;font-size:14px;font-weight:600;min-width:160px;white-space:normal;white-space:nowrap;}
+.pg{background:#22c55e20;color:#22c55e;}
+.py{background:#f59e0b20;color:#f59e0b;}
+.pr{background:#ef444420;color:#ef4444;}
+.pb{background:#3b82f620;color:#3b82f6;}
+.pp{background:#6c63ff20;color:#6c63ff;}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.tab{padding:7px 14px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;border:1px solid #2a2d3e;background:transparent;color:#8b8fa8;transition:all .2s;white-space:nowrap;}
+.tab.active{background:#6c63ff;color:#fff;border-color:#6c63ff;}
+.tc{display:none;}
+.tc.active{display:block;}
+.pr-row{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid #1f2235;}
+.pr-row:last-child{border-bottom:none;}
+.pr-ico{font-size:20px;flex-shrink:0;margin-top:2px;}
+.pr-info{flex:1;}
+.pr-name{font-size:14px;font-weight:600;color:#fff;}
+.pr-asin{font-size:15px;color:#6b7280;font-family:monospace;margin-top:2px;}
+.pr-chips{display:flex;gap:9px;margin-top:10px;flex-wrap:wrap;}
+.chip{background:#ffffff08;border:1px solid #ffffff10;border-radius:7px;padding:5px 11px;font-size:14px;color:#d1d5db;}
+.chip span{color:#6b7280;font-size:15px;margin-right:3px;}
+.pr-note{font-size:14px;color:#9ca3af;margin-top:8px;line-height:1.6;}
+.ac{border-radius:10px;padding:15px 18px;margin-bottom:10px;border-left:4px solid;}
+.ac-r{background:#ef444410;border-color:#ef4444;}
+.ac-y{background:#f59e0b10;border-color:#f59e0b;}
+.ac-b{background:#3b82f610;border-color:#3b82f6;}
+.ac-p{background:#6c63ff12;border-color:#6c63ff;}
+.ac h4{font-size:15px;font-weight:700;margin-bottom:5px;}
+.ac p{font-size:14px;color:#c5c7d4;line-height:1.6;}
+.fi{background:#22c55e0e;border:1px solid #22c55e20;border-radius:9px;padding:13px 16px;margin-bottom:9px;font-size:15px;color:#c5c7d4;line-height:1.65;}
+.fi::before{content:"✓ ";color:#22c55e;font-weight:700;}
+.internal-only{display:block;}
+.client-only{display:none;}
+.view-client .internal-only{display:none!important;}
+.view-client .client-only{display:block!important;}
+@media(max-width:900px){.scorecard{grid-template-columns:repeat(3,1fr);}.g2,.hw{grid-template-columns:1fr;}.hwc:first-child{border-right:none;border-bottom:1px solid #2a2d3e;}}
+</style>
+</head>
+<body id="dash">
+<div class="header">
+  <div><h1>🦷 Happy Tooth — PPC Audit Dashboard</h1><p>March 1–31, 2026 &nbsp;·&nbsp; Target ROAS: 2.5x &nbsp;·&nbsp; Target TACoS: 13% &nbsp;·&nbsp; Auditor: Arvanza</p></div>
+  <div class="toggle-wrap"><button class="toggle-btn active" id="btnI" onclick="setView('internal')">⚙ Internal</button><button class="toggle-btn" id="btnC" onclick="setView('client')">👤 Client View</button></div>
+</div>
+<div class="sale-banner">🏷️ <strong style="color:#f59e0b;">Big Spring Sale: Mar 25–31</strong> — CPCs spiked +32% during the event. Pre-sale baseline (Mar 1–24): <strong style="color:#22c55e;">2.65x ROAS | 37.8% ACoS ✅</strong></div>
+
+<div class="con">
+
+<!-- QUICK SUMMARY -->
+<div class="qs">
+  <div class="qs-label">⚡ Quick Summary</div>
+
+  <div class="qs-text internal-only">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;">
+
+      <div style="background:#ffffff07;border:1px solid #2a2d3e;border-radius:10px;padding:16px 18px;">
+        <div style="font-size:11px;font-weight:700;color:#6c63ff;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #6c63ff22;padding-bottom:6px;">📊 Performance Overview</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#6c63ff;font-size:14px;line-height:1.55;">→</span> Total revenue <strong>$404,148</strong> — up <strong>6.4% MoM</strong> and <strong>+70% YoY</strong> on $60,516 ad spend</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#6c63ff;font-size:14px;line-height:1.55;">→</span> Full-month ROAS <strong>2.49x</strong> — pre-sale baseline was <strong>2.65x at 37.8% ACoS ✅</strong> (above target)</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#f59e0b;font-size:14px;line-height:1.55;">→</span> TACoS <strong>15.0%</strong> vs. 13% target — driven by Big Spring Sale spend ramp; pre-sale was <strong>12.6% ✅</strong></li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> <strong>$253,172 organic revenue</strong> — 62.6% of total; ads are amplifying a brand that's already working</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> Big Spring Sale (Mar 25–31): +37.1% orders week-over-week; ACoS elevated to 48% — within normal range for deal events</li>
+        </ul>
+      </div>
+
+      <div style="background:#ffffff07;border:1px solid #2a2d3e;border-radius:10px;padding:16px 18px;">
+        <div style="font-size:11px;font-weight:700;color:#22c55e;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #22c55e22;padding-bottom:6px;">🔥 What's Driving It</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> <strong>"Happy tooth toothpaste"</strong> — 3,517 orders at 58.5% CVR, 26.5% ACoS; 21.8% of spend → 33% of sales</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> <strong>Branded KW campaign</strong> — 5.03x ROAS on 16.3% of budget; most efficient dollar in the account</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> <strong>"Happy tooth mouthwash"</strong> — 67.3% CVR, 9.7% ACoS, 10.36x ROAS; mouthwash brand awareness is real</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> <strong>Fresh Mint TP</strong> — $123K total revenue at 11.1% TACoS; uses 22.7% of spend, drives 30.4% of revenue</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> Organic ranks improving: "kids toothpaste" (133K SV) Fresh Mint p245→p67; "hydroxyapatite toothpaste" Vanilla p56→p20</li>
+        </ul>
+      </div>
+
+      <div style="background:#ffffff07;border:1px solid #2a2d3e;border-radius:10px;padding:16px 18px;">
+        <div style="font-size:11px;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #ef444422;padding-bottom:6px;">🔴 What Needs Fixing</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#ef4444;font-size:14px;line-height:1.55;">→</span> <strong>Boka PT duplicate</strong> — 133.8% ACoS, $543/mo wasted; pause today, zero justification for this running</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#ef4444;font-size:14px;line-height:1.55;">→</span> <strong>All Products Auto Low Bid</strong> — 8+ months at 73.7% ACoS; $4,506 in March alone (~$50K/yr); needs a decision</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#f59e0b;font-size:14px;line-height:1.55;">→</span> <strong>Mint Brownie TP</strong> — 15% session CVR, 73.5% ACoS; both signals point to listing issue, not a bid issue</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#f59e0b;font-size:14px;line-height:1.55;">→</span> <strong>Lemon Twist</strong> — spend +507% MoM ($299→$1,814) but ROAS dropped to 1.70x; too fast, too soon; tighten targeting</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#f59e0b;font-size:14px;line-height:1.55;">→</span> <strong>CPC up 100% YoY</strong> ($1.00→$2.00) — category competition growing fast; keyword moat must deepen before it erodes further</li>
+        </ul>
+      </div>
+
+      <div style="background:#ffffff07;border:1px solid #2a2d3e;border-radius:10px;padding:16px 18px;">
+        <div style="font-size:11px;font-weight:700;color:#6c63ff;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #6c63ff22;padding-bottom:6px;">⚡ April Priority Actions</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#ef4444;font-size:14px;line-height:1.55;">①</span> Pause Boka PT duplicate → <strong>$543/mo recovered immediately</strong></li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#ef4444;font-size:14px;line-height:1.55;">②</span> Decision on All Products Auto Low Bid — scrub or shut down</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#f59e0b;font-size:14px;line-height:1.55;">③</span> Build exact campaigns: "hydroxyapatite mouthwash" · "toothpaste kids" · "yellow teeth stain remover kids"</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#f59e0b;font-size:14px;line-height:1.55;">④</span> Mint Brownie listing review — images, pricing, reviews before touching bids</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#3b82f6;font-size:14px;line-height:1.55;">⑤</span> Read kids TP Broad (Apr 25) and competitor PT expansion (Apr 23)</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="qs-text client-only" style="display:none;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start;">
+
+      <div style="background:#ffffff07;border:1px solid #2a2d3e;border-radius:10px;padding:16px 18px;">
+        <div style="font-size:11px;font-weight:700;color:#22c55e;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #22c55e22;padding-bottom:6px;">✅ The Big Picture</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> Total revenue hit <strong>$404,148</strong> in March — up 6% from February and <strong>+70% vs. March last year</strong></li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> <strong>62.6% of revenue is organic</strong> — the majority of your business is happening without paid ads</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> Orders grew <strong>+10% year-over-year</strong> with higher revenue per order — customers are spending more</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> Big Spring Sale delivered <strong>+37% more orders</strong> vs. the prior week — the promotion worked</li>
+        </ul>
+      </div>
+
+      <div style="background:#ffffff07;border:1px solid #2a2d3e;border-radius:10px;padding:16px 18px;">
+        <div style="font-size:11px;font-weight:700;color:#22c55e;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #22c55e22;padding-bottom:6px;">🔥 Brand Strength Signals</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> Customers searching Happy Tooth by name are converting at <strong>55–67%</strong> — 2–3x the industry average</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> Mouthwash line growing fast — <strong>+352% revenue year-over-year</strong> and now ranking #1 organically for key terms</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> Organic rankings improving on major terms — "kids toothpaste," "hydroxyapatite toothpaste," and more</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> Ad spend is building long-term organic visibility — every dollar working twice</li>
+        </ul>
+      </div>
+
+      <div style="background:#ffffff07;border:1px solid #2a2d3e;border-radius:10px;padding:16px 18px;">
+        <div style="font-size:11px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #f59e0b22;padding-bottom:6px;">⚠️ Context on March Metrics</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#f59e0b;font-size:14px;line-height:1.55;">→</span> Ad efficiency dipped in March — the Big Spring Sale and several new campaign launches both ran simultaneously</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#f59e0b;font-size:14px;line-height:1.55;">→</span> Our <strong>pre-sale baseline was on target</strong> — the blended number reflects sale-event costs, not an underlying issue</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#f59e0b;font-size:14px;line-height:1.55;">→</span> New campaigns (mouthwash TOS, kids toothpaste, competitor targeting) are still in learning phase — read dates in April</li>
+        </ul>
+      </div>
+
+      <div style="background:#ffffff07;border:1px solid #2a2d3e;border-radius:10px;padding:16px 18px;">
+        <div style="font-size:11px;font-weight:700;color:#6c63ff;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #6c63ff22;padding-bottom:6px;">⚡ Focus for April</div>
+        <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:9px;">
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#22c55e;font-size:14px;line-height:1.55;">→</span> Scaling campaigns that are outperforming — especially mouthwash and branded terms</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#f59e0b;font-size:14px;line-height:1.55;">→</span> Pausing underperformers and tightening bids — expect TACoS to normalize back toward 13%</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#f59e0b;font-size:14px;line-height:1.55;">→</span> Mint Brownie listing review — we'll look at images, pricing, and reviews together</li>
+          <li style="font-size:14px;color:#d4d6e8;padding-left:18px;position:relative;line-height:1.55;word-break:normal;"><span style="position:absolute;left:0;color:#6c63ff;font-size:14px;line-height:1.55;">→</span> Full read on all new campaigns by end of April — optimize or cut based on data</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="qs-pills">
+    <div class="qp g">Pre-Sale ROAS: <b>2.65x ✅</b></div>
+    <div class="qp y">Full Month ROAS: <b>2.49x</b></div>
+    <div class="qp y">TACoS: <b>15.0%</b> (target 13%)</div>
+    <div class="qp g">Total Revenue: <b>$404,148 (+6.4% MoM / +70% YoY)</b></div>
+    <div class="qp g">Organic Revenue: <b>$253,172 (62.6%)</b></div>
+    <div class="qp g">Top Term CVR: <b>67.3%</b></div>
+    <div class="qp">CPC YoY: <b>$1.00 → $2.00 (+100%)</b></div>
+    <div class="qp g">Recoverable Waste: <b>~$3.7K/mo</b></div>
+  </div>
+</div>
+
+<!-- SCORECARD -->
+<div class="scorecard">
+  <div class="sc y"><div class="l">Full Month ACoS</div><div class="v">40.1%</div><div class="s">Pre-sale: 37.8% ✅</div></div>
+  <div class="sc y"><div class="l">Full Month ROAS</div><div class="v">2.49x</div><div class="s">Pre-sale: 2.65x ✅</div></div>
+  <div class="sc r"><div class="l">TACoS (Mar)</div><div class="v">15.0%</div><div class="s">Target: 13% · Feb: 12.6%</div></div>
+  <div class="sc r"><div class="l">Ad Spend</div><div class="v">$60.5K</div><div class="s">+26.7% vs. Feb</div></div>
+  <div class="sc y"><div class="l">Ad Sales</div><div class="v">$151.0K</div><div class="s">-2.4% vs. Feb</div></div>
+  <div class="sc g"><div class="l">Orders</div><div class="v">10,233</div><div class="s">+1.3% vs. Feb</div></div>
+</div>
+
+<!-- TOPLINE REVENUE BLOCK -->
+<div class="card" style="margin-bottom:20px;">
+  <h3>💰 Topline Performance — Total Revenue (Organic + Paid)</h3>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
+    <div style="background:#22c55e12;border:1px solid #22c55e25;border-radius:9px;padding:14px;">
+      <div style="font-size:14px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Total Revenue (Mar)</div>
+      <div style="font-size:22px;font-weight:700;">$404,148</div>
+      <div style="font-size:15px;color:#22c55e;margin-top:3px;">+6.4% vs. Feb $379,775</div>
+    </div>
+    <div style="background:#f59e0b12;border:1px solid #f59e0b25;border-radius:9px;padding:14px;">
+      <div style="font-size:14px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">TACoS (Mar)</div>
+      <div style="font-size:22px;font-weight:700;">15.0%</div>
+      <div style="font-size:15px;color:#f59e0b;margin-top:3px;">Feb: 12.6% · Target: 13%</div>
+    </div>
+    <div style="background:#6c63ff12;border:1px solid #6c63ff25;border-radius:9px;padding:14px;">
+      <div style="font-size:14px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Organic Revenue</div>
+      <div style="font-size:22px;font-weight:700;">$253,172</div>
+      <div style="font-size:15px;color:#6c63ff;margin-top:3px;">62.6% of total revenue</div>
+    </div>
+    <div style="background:#22c55e12;border:1px solid #22c55e25;border-radius:9px;padding:14px;">
+      <div style="font-size:14px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Total Units Ordered</div>
+      <div style="font-size:22px;font-weight:700;">29,726</div>
+      <div style="font-size:15px;color:#22c55e;margin-top:3px;">+10.3% vs. Feb 26,946</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+    <div>
+      <div style="font-size:14px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Total Revenue by ASIN (Mar)</div>
+      <canvas id="cTopRev" height="160"></canvas>
+    </div>
+    <div>
+      <div style="font-size:14px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Organic vs. Paid Split by ASIN</div>
+      <canvas id="cOrgPaid" height="160"></canvas>
+    </div>
+  </div>
+  <div style="margin-top:16px;">
+    <div style="font-size:14px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">TACoS by ASIN vs. 13% Target</div>
+    <canvas id="cTacos" height="70"></canvas>
+  </div>
+</div>
+
+<!-- YOY BANNER -->
+<div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,#1a1d27,#16192a);border:1px solid #6c63ff33;">
+  <h3>📅 Year-over-Year — March 2025 vs. March 2026 <span style="background:#6c63ff22;color:#6c63ff;font-size:11px;padding:3px 9px;border-radius:7px;font-weight:600;margin-left:6px;">Source: Business Report + Sellermate</span></h3>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;">
+    <div style="background:#22c55e12;border:1px solid #22c55e30;border-radius:9px;padding:15px;">
+      <div style="font-size:11px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Total Revenue</div>
+      <div style="font-size:13px;color:#6b7280;margin-bottom:2px;">Mar '25: $237,441</div>
+      <div style="font-size:20px;font-weight:700;">$404,148</div>
+      <div style="font-size:13px;color:#22c55e;font-weight:700;margin-top:4px;">+70.2% YoY 🚀</div>
+    </div>
+    <div style="background:#f59e0b12;border:1px solid #f59e0b30;border-radius:9px;padding:15px;">
+      <div style="font-size:11px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Ad Spend</div>
+      <div style="font-size:13px;color:#6b7280;margin-bottom:2px;">Mar '25: $16,774</div>
+      <div style="font-size:20px;font-weight:700;">$60,516</div>
+      <div style="font-size:13px;color:#f59e0b;font-weight:700;margin-top:4px;">+261% YoY (intentional)</div>
+    </div>
+    <div style="background:#ef444412;border:1px solid #ef444430;border-radius:9px;padding:15px;">
+      <div style="font-size:11px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">TACoS</div>
+      <div style="font-size:13px;color:#6b7280;margin-bottom:2px;">Mar '25: 7.1%</div>
+      <div style="font-size:20px;font-weight:700;">15.0%</div>
+      <div style="font-size:13px;color:#ef4444;font-weight:700;margin-top:4px;">+7.9pp YoY — growth investment</div>
+    </div>
+    <div style="background:#22c55e12;border:1px solid #22c55e30;border-radius:9px;padding:15px;">
+      <div style="font-size:11px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Total Units</div>
+      <div style="font-size:13px;color:#6b7280;margin-bottom:2px;">Mar '25: 18,969</div>
+      <div style="font-size:20px;font-weight:700;">29,726</div>
+      <div style="font-size:13px;color:#22c55e;font-weight:700;margin-top:4px;">+56.7% YoY</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;">
+    <div style="background:#22c55e0a;border:1px solid #22c55e20;border-radius:9px;padding:14px 16px;">
+      <div style="font-size:11px;color:#22c55e;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">🚀 Biggest YoY Growth Stories</div>
+      <div style="font-size:13px;color:#d4d6e8;line-height:2.1;">
+        <b style="color:#fff;">Mouthwash Mint</b> — $15.5K → $70.0K &nbsp;<span style="color:#22c55e;font-weight:700;">+352%</span> (barely existed in Mar '25)<br>
+        <b style="color:#fff;">Mouthwash Orange</b> — $5.7K → $19.7K &nbsp;<span style="color:#22c55e;font-weight:700;">+249%</span><br>
+        <b style="color:#fff;">Fresh Mint TP</b> — $69.5K → $123.0K &nbsp;<span style="color:#22c55e;font-weight:700;">+77%</span><br>
+        <b style="color:#fff;">Lemon Twist TP</b> — $0 → $8.4K &nbsp;<span style="color:#22c55e;font-weight:700;">NEW launch</span><br>
+        <b style="color:#fff;">Sessions → Revenue ratio</b> — +21.5% sessions driving +70.2% revenue = better monetization per visit
+      </div>
+    </div>
+    <div style="background:#f59e0b0a;border:1px solid #f59e0b20;border-radius:9px;padding:14px 16px;">
+      <div style="font-size:11px;color:#f59e0b;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">⚠️ The Trade-off to Understand</div>
+      <div style="font-size:13px;color:#d4d6e8;line-height:2.1;">
+        <b style="color:#fff;">ACoS:</b> 22.0% → 40.1% &nbsp;— driven by mouthwash investment + new campaign launches<br>
+        <b style="color:#fff;">ROAS:</b> 4.54x → 2.49x &nbsp;— intentional: Mar '25 was low-spend, high-efficiency; Mar '26 is growth mode<br>
+        <b style="color:#fff;">CPC:</b> ~$1.00 → ~$2.13 &nbsp;— category competition increased +113% YoY<br>
+        <b style="color:#fff;">Context:</b> Revenue grew +70% on +261% more spend. The account is scaling aggressively — efficiency dip is expected and acceptable while brand equity builds.
+      </div>
+    </div>
+  </div>
+  <div style="overflow-x:auto;">
+    <div style="font-size:18px;font-weight:800;color:#6c63ff;padding:6px 0 12px 2px;letter-spacing:-.2px;">📅 Year-over-Year — March 2025 vs. March 2026</div>
+    <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Total Rev</th><th>Rev YoY</th>
+          <th>Ad Spend</th><th>Spend YoY</th>
+          <th>Ad Sales</th><th>Sales YoY</th>
+          <th>Org Sales</th><th>Org %</th>
+          <th>TACoS</th><th>TACoS YoY</th>
+          <th>ACoS</th><th>ACoS YoY</th>
+          <th>ROAS</th><th>ROAS YoY</th>
+          <th>Sess CVR</th><th>CVR YoY</th>
+          <th>Ad CVR</th><th>Ad CVR YoY</th>
+          <th>Orders</th><th>Orders YoY</th>
+          <th>CPC</th><th>CPC YoY</th>
+          <th>Buy Box</th>
+        </tr>
+      </thead>
+      <tbody id="yoyTableBody"></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- YOY SUMMARY STRIP -->
+<div style="background:#6c63ff0a;border:1px solid #6c63ff22;border-radius:10px;padding:14px 18px;margin-bottom:20px;">
+  <div style="font-size:12px;font-weight:700;color:#6c63ff;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">📅 YoY Snapshot — What the data says at a glance</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#22c55e12;border:1px solid #22c55e25;border-radius:8px;flex:1;min-width:130px;">
+      <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">Total Revenue</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;">$237K → $404K <span style="color:#22c55e;font-size:12px;font-weight:700;">+70%</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#22c55e12;border:1px solid #22c55e25;border-radius:8px;flex:1;min-width:130px;">
+      <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">Total Units</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;">18,969 → 29,726 <span style="color:#22c55e;font-size:12px;font-weight:700;">+57%</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#f59e0b12;border:1px solid #f59e0b25;border-radius:8px;flex:1;min-width:130px;">
+      <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">Ad Spend</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;">$16.8K → $60.5K <span style="color:#f59e0b;font-size:12px;font-weight:700;">+261%</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#f59e0b12;border:1px solid #f59e0b25;border-radius:8px;flex:1;min-width:130px;">
+      <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">TACoS</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;">7.1% → 15.0% <span style="color:#f59e0b;font-size:12px;font-weight:700;">intentional investment</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#ef444412;border:1px solid #ef444425;border-radius:8px;flex:1;min-width:130px;">
+      <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">ROAS</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;">4.54x → 2.49x <span style="color:#ef4444;font-size:12px;font-weight:700;">growth mode trade-off</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#22c55e12;border:1px solid #22c55e25;border-radius:8px;flex:1;min-width:130px;">
+      <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">Biggest Win</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;">Mouthwash Mint <span style="color:#22c55e;font-size:12px;font-weight:700;">$15.5K → $70K (+352%)</span></div>
+    </div>
+  </div>
+  <div style="font-size:13px;color:#9ca3af;margin-top:10px;line-height:1.6;">Revenue grew <strong style="color:#fff;">3.3× faster than sessions</strong> (+70% rev vs. +21.5% sessions) — the catalog converts better than it did a year ago. Spend grew +261% intentionally to build market share. Context: March '25 was a lean, under-invested account. March '26 is a brand in growth mode.</div>
+</div>
+
+<!-- TOPLINE TABLE -->
+<div class="card" style="margin-bottom:20px;">
+  <h3>📋 ASIN Topline — Total Revenue, TACoS & Session CVR <span style="background:#6c63ff22;color:#6c63ff;font-size:15px;padding:2px 7px;border-radius:7px;font-weight:600;margin-left:6px;">Business Report + Sellermate</span></h3>
+  <div style="overflow-x:auto;">
+    <div style="font-size:18px;font-weight:800;color:#f59e0b;padding:6px 0 12px 2px;letter-spacing:-.2px;">📊 Month-over-Month — February 2026 vs. March 2026</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Total Rev</th><th>Rev MoM</th>
+          <th>Ad Spend</th><th>Spend MoM</th>
+          <th>Ad Sales</th><th>Ad Sales MoM</th>
+          <th>Org Sales</th><th>Org %</th>
+          <th>TACoS</th><th>TACoS MoM</th>
+          <th>ACoS</th><th>ACoS MoM</th>
+          <th>ROAS</th><th>ROAS MoM</th>
+          <th>Sess CVR</th><th>CVR MoM</th>
+          <th>Ad CVR</th><th>Ad CVR MoM</th>
+          <th>Orders</th><th>Orders MoM</th>
+          <th>CPC</th><th>CPC MoM</th>
+          <th>Buy Box</th>
+        </tr>
+      </thead>
+      <tbody id="toplineTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- MOM SUMMARY STRIP -->
+<div style="background:#f59e0b0a;border:1px solid #f59e0b22;border-radius:10px;padding:14px 18px;margin-bottom:20px;">
+  <div style="font-size:12px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">📊 MoM Snapshot — February vs. March 2026</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#22c55e12;border:1px solid #22c55e25;border-radius:8px;flex:1;min-width:130px;">
+      <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">Total Revenue</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;">$379.8K → $404.1K <span style="color:#22c55e;font-size:12px;font-weight:700;">+6.4%</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#f59e0b12;border:1px solid #f59e0b25;border-radius:8px;flex:1;min-width:130px;">
+      <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">Ad Spend</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;">$47.8K → $60.5K <span style="color:#f59e0b;font-size:12px;font-weight:700;">+27%</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#ef444412;border:1px solid #ef444425;border-radius:8px;flex:1;min-width:130px;">
+      <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">TACoS</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;">12.6% → 15.0% <span style="color:#ef4444;font-size:12px;font-weight:700;">+2.4pp (sale event)</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#ef444412;border:1px solid #ef444425;border-radius:8px;flex:1;min-width:130px;">
+      <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">ROAS</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;">3.24x → 2.49x <span style="color:#ef4444;font-size:12px;font-weight:700;">pre-sale: 2.65x ✅</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#22c55e12;border:1px solid #22c55e25;border-radius:8px;flex:1;min-width:130px;">
+      <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">Top Mover</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;">Fresh Mint <span style="color:#22c55e;font-size:12px;font-weight:700;">+6% rev, 11.1% TACoS ✅</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#ef444412;border:1px solid #ef444425;border-radius:8px;flex:1;min-width:130px;">
+      <div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;">Watch</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;">Lemon Twist <span style="color:#ef4444;font-size:12px;font-weight:700;">spend +507%, ROAS 1.70x</span></div>
+    </div>
+  </div>
+  <div style="font-size:13px;color:#9ca3af;margin-top:10px;line-height:1.6;">The MoM efficiency dip is almost entirely a <strong style="color:#fff;">Big Spring Sale artifact</strong> — spend ramp + CPC inflation during Mar 25–31 dragged the full-month blended numbers down. Pre-sale (Mar 1–24) was running at 2.65x ROAS and 12.6% TACoS — both on target.</div>
+</div>
+
+<!-- HOW + WHY -->
+<div class="hw">
+  <div class="hwc">
+    <h3>🔧 HOW — Actions Taken</h3>
+    <div class="hwi"><div class="hwa"><span class="htag tl">Launch</span>Kids Toothpaste KW Campaigns ×4</div><div class="hww">Mint & Vanilla | Exact, Phrase, Broad — Mar 26–27. 4 days old, ramping.</div></div>
+    <div class="hwi"><div class="hwa"><span class="htag tl">Launch</span>Mouthwash Auto-Segmented TOS ×6</div><div class="hww">Loose / Substitutes / Complements / Close — Mar 11. 20 days in, Substitutes showing 24.7% ACoS early.</div></div>
+    <div class="hwi"><div class="hwa"><span class="htag tl">Launch</span>Competitor PT Expansion ×3</div><div class="hww">SuperTeeth, RiseWell, Dr. Jens PT campaigns — Mar 24. 7 days old.</div></div>
+    <div class="hwi"><div class="hwa"><span class="htag tl">Launch</span>Orange Mouthwash DEF Branded Phrase</div><div class="hww">New branded defense for the orange mouthwash SKU — Mar 11.</div></div>
+  </div>
+  <div class="hwc">
+    <h3>💡 WHY — The Strategy Behind It</h3>
+
+    <div class="hwi">
+      <div class="hwa">Why kids toothpaste KW campaigns?</div>
+      <div class="hww">
+        <strong>The signal:</strong> "Kids toothpaste" was already generating <strong>134 orders/month at 29.5% CVR</strong> through existing campaigns — real, consistent demand with no dedicated structure behind it. That CVR tells us shoppers searching this term are highly purchase-ready.<br><br>
+        <strong>The approach:</strong> Launched Exact, Phrase, and Broad for both Mint and Vanilla (×4 campaigns, Mar 26–27) to find the most efficient match type entry point. Only 4–5 days old at month end — too early to judge.<br><br>
+        <strong>Early read (4 days):</strong> Vanilla Exact already at <strong>48% ACoS / 2.08x ROAS / 31.9% CVR</strong> — strongest signal of the group. Broad and Phrase running hot (90–122% ACoS) as expected this early. Read date: <strong>April 25</strong>.
+      </div>
+    </div>
+
+    <div class="hwi">
+      <div class="hwa">Why mouthwash auto-segmented TOS ×6?</div>
+      <div class="hww">
+        <strong>The signal:</strong> "Happy tooth mouthwash" branded term was converting at <strong>67.3% CVR and 9.7% ACoS</strong> — 10.36x ROAS — with no dedicated non-branded mouthwash structure to capture shoppers who weren't already searching by name. That gap was leaving real volume on the table.<br><br>
+        <strong>The approach:</strong> Auto-segmented TOS structure (Substitutes / Complements / Loose / Close) separates intent types so each segment can be optimized independently rather than lumped into one auto campaign.<br><br>
+        <strong>20-day results:</strong> Mint Substitutes <strong>24.7% ACoS / 4.05x ROAS ✅</strong> — best performer. Complements <strong>17.3% ACoS / 5.79x ROAS ✅</strong> — exceptional early signal. Orange Loose at 29.2% ACoS / 3.43x ROAS also tracking well. Blended across all 6: <strong>$433 spend → $1,454 sales / 3.36x ROAS</strong>. Hypothesis confirmed.
+      </div>
+    </div>
+
+    <div class="hwi">
+      <div class="hwa">Why expand competitor PTs (Dr. Jens / RiseWell / SuperTeeth)?</div>
+      <div class="hww">
+        <strong>The signal:</strong> Happy Tooth's session CVR is 50–70% on branded terms — customers who find the product buy it. The opportunity is getting in front of shoppers actively comparing hydroxyapatite products on competitor listings, where purchase intent is already high.<br><br>
+        <strong>The approach:</strong> Targeted the 3 closest ASINs in the hydroxyapatite category — Dr. Jens, RiseWell, and SuperTeeth. Launched Mar 24, only 7 days old at month end.<br><br>
+        <strong>7-day results:</strong> Dr. Jens <strong>44.6% ACoS / 2.24x ROAS / 190 orders</strong> — already showing real volume. RiseWell at 84.7% ACoS / 1.18x ROAS — struggling at current bids, needs a cut. SuperTeeth: 0 orders yet — too early or wrong audience. Read date: <strong>April 23</strong>.
+      </div>
+    </div>
+
+    <div class="hwi">
+      <div class="hwa">Why Orange Mouthwash DEF branded phrase?</div>
+      <div class="hww">
+        <strong>The signal:</strong> As the mouthwash line grew, branded search for the orange SKU was going undefended — any competitor could show up when a customer searched "happy tooth mouthwash." That's a leaky bucket problem at the bottom of the funnel.<br><br>
+        <strong>The approach:</strong> Launched a dedicated branded phrase defense campaign for the orange mouthwash SKU on Mar 11 to protect the conversion path for customers who already know the brand.<br><br>
+        <strong>20-day results:</strong> <strong>$142 spend → $744 sales / 19.1% ACoS / 5.23x ROAS / 65.6% CVR</strong>. One of the highest-performing campaigns launched in March. Exactly what a branded defense should look like — low cost, high conviction customer, near-zero waste.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOM / WOW -->
+<div class="g2">
+  <div class="card">
+    <h3>📈 Month-over-Month — Mar vs. Feb</h3>
+    <div class="tabs"><button class="tab active" onclick="sw('mom','sp')">Spend & Sales</button><button class="tab" onclick="sw('mom','ef')">ACoS & ROAS</button><button class="tab" onclick="sw('mom','vo')">Orders & CPC</button></div>
+    <div id="mom-sp" class="tc active"><canvas id="cMS" height="180"></canvas></div>
+    <div id="mom-ef" class="tc"><canvas id="cME" height="180"></canvas></div>
+    <div id="mom-vo" class="tc"><canvas id="cMV" height="180"></canvas></div>
+  </div>
+  <div class="card">
+    <h3>📊 Pre-Sale vs. 🏷️ Sale Week</h3>
+    <div class="tabs"><button class="tab active" onclick="sw('wow','sp')">Spend & Sales</button><button class="tab" onclick="sw('wow','ef')">ACoS & ROAS</button></div>
+    <div id="wow-sp" class="tc active"><canvas id="cWS" height="180"></canvas></div>
+    <div id="wow-ef" class="tc"><canvas id="cWE" height="180"></canvas></div>
+  </div>
+</div>
+
+
+<!-- CHARTS SUMMARY STRIP -->
+<div style="background:#3b82f60a;border:1px solid #3b82f622;border-radius:10px;padding:14px 18px;margin-bottom:20px;">
+  <div style="font-size:12px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">📈 Charts Summary — What to take from these visuals</div>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:200px;">
+      <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px;">MoM Spend & Sales</div>
+      <div style="font-size:13px;color:#9ca3af;line-height:1.6;">Spend jumped $12.7K MoM while sales held flat — the Big Spring Sale consumed incremental budget without proportional ad sales return. That's expected for deal events. Organic revenue picked up the gap.</div>
+    </div>
+    <div style="width:1px;background:#2a2d3e;flex-shrink:0;"></div>
+    <div style="flex:1;min-width:200px;">
+      <div style="font-size:12px;font-weight:700;color:#fff;margin-bottom:4px;">Pre-Sale vs. Sale Week</div>
+      <div style="font-size:13px;color:#9ca3af;line-height:1.6;">Pre-sale spend was $6.5K/week at 37.8% ACoS — well within target. Sale week spend hit $16.1K with ACoS rising to 48%. The chart shows the event clearly. This is what a well-run deal event looks like — controlled ramp, returns followed.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT LEVEL -->
+<div class="card" style="margin-bottom:20px;">
+  <h3>📦 Product Level Performance — All Active Listings (8 ASINs)</h3>
+  <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+    <div style="background:#22c55e15;border:1px solid #22c55e30;border-radius:7px;padding:6px 12px;font-size:15px;"><b style="color:#22c55e;">✅ On Target (≥2.5x ROAS):</b> 2 ASINs</div>
+    <div style="background:#f59e0b15;border:1px solid #f59e0b30;border-radius:7px;padding:6px 12px;font-size:15px;"><b style="color:#f59e0b;">⚠️ Watch (1.5–2.5x ROAS):</b> 3 ASINs</div>
+    <div style="background:#ef444415;border:1px solid #ef444430;border-radius:7px;padding:6px 12px;font-size:15px;"><b style="color:#ef4444;">🔴 Investigate (&lt;1.5x ROAS):</b> 3 ASINs</div>
+  </div>
+  <div id="prodList"></div>
+  <div style="margin-top:18px;"><div style="font-size:14px;color:#8b8fa8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">ACoS by Product vs. 40% Target</div><canvas id="cAsin" height="100"></canvas></div>
+</div>
+
+
+<!-- ACOS CHART SUMMARY STRIP -->
+<div style="background:#ffffff06;border:1px solid #2a2d3e;border-radius:10px;padding:14px 18px;margin-bottom:20px;">
+  <div style="font-size:12px;font-weight:700;color:#8b8fa8;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;">📦 ACoS by Product — What this chart tells you</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#22c55e12;border:1px solid #22c55e25;border-radius:8px;flex:1;min-width:160px;">
+      <div style="font-size:11px;color:#22c55e;font-weight:700;text-transform:uppercase;">✅ On Target (≤40%)</div>
+      <div style="font-size:13px;color:#d4d6e8;font-weight:600;">Fresh Mint 30.3% · Mouthwash Mint 39.5%</div>
+      <div style="font-size:12px;color:#9ca3af;">Both at or below target — protect and scale these budgets</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#f59e0b12;border:1px solid #f59e0b25;border-radius:8px;flex:1;min-width:160px;">
+      <div style="font-size:11px;color:#f59e0b;font-weight:700;text-transform:uppercase;">⚠️ Watch (40–55%)</div>
+      <div style="font-size:13px;color:#d4d6e8;font-weight:600;">Vanilla Frosting 43.4% · Sweet Orange 45.6% · Mouthwash Orange 49.6%</div>
+      <div style="font-size:12px;color:#9ca3af;">Just above target — bid efficiency adjustments, not budget cuts</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:3px;padding:11px 14px;background:#ef444412;border:1px solid #ef444425;border-radius:8px;flex:1;min-width:160px;">
+      <div style="font-size:11px;color:#ef4444;font-weight:700;text-transform:uppercase;">🔴 Investigate (55%+)</div>
+      <div style="font-size:13px;color:#d4d6e8;font-weight:600;">Lemon Twist 58.8% · Whitening Kit 60.4% · Mint Brownie 73.5%</div>
+      <div style="font-size:12px;color:#9ca3af;">Lemon Twist: too fast too soon. Whitening Kit: overbidding. Mint Brownie: listing issue first</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRIBUTION TABLES -->
+<div class="card" style="margin-bottom:20px;">
+  <h3>📊 Contribution Analysis <span style="background:#6c63ff22;color:#6c63ff;font-size:15px;padding:2px 7px;border-radius:7px;font-weight:600;margin-left:4px;">% of Total Spend &amp; Sales</span></h3>
+  <div class="tabs" id="contribTabs">
+    <button class="tab active" onclick="contTab('branded')">🏷️ Top 20 Branded Terms</button>
+    <button class="tab" onclick="contTab('nb')">🎯 Top 25 Non-Branded Terms</button>
+    <button class="tab" onclick="contTab('camp')">📋 Top 20 Campaigns</button>
+    <button class="tab" onclick="contTab('prod')">📦 All Products</button>
+  </div>
+
+  <!-- BRANDED TERMS TAB -->
+  <div id="cont-branded" class="tc active">
+    <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+      <div style="background:#22c55e15;border:1px solid #22c55e30;border-radius:7px;padding:5px 11px;font-size:15px;"><b style="color:#22c55e;">33.0% of spend → 53.9% of sales</b> · 5,618 orders</div>
+      <div style="background:#6c63ff15;border:1px solid #6c63ff30;border-radius:7px;padding:5px 11px;font-size:15px;color:#c5c7d4;">% = share of account's $60,516 spend &amp; $150,963 ad sales</div>
+    </div>
+    <div style="overflow-x:auto;"><table><thead><tr><th>#</th><th>Search Term</th><th>Spend</th><th>% of Spend</th><th>Sales</th><th>% of Sales</th><th>Orders</th><th>CVR</th><th>ACoS</th><th>ROAS</th><th>Action</th></tr></thead><tbody id="brandedCB"></tbody></table></div>
+  </div>
+
+  <!-- NON-BRANDED TERMS TAB -->
+  <div id="cont-nb" class="tc">
+    <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+      <div style="background:#f59e0b15;border:1px solid #f59e0b30;border-radius:7px;padding:5px 11px;font-size:15px;"><b style="color:#f59e0b;">14.3% of spend → 11.1% of sales</b> · 1,111 orders</div>
+      <div style="background:#6c63ff15;border:1px solid #6c63ff30;border-radius:7px;padding:5px 11px;font-size:15px;color:#c5c7d4;">% = share of account's $60,516 spend &amp; $150,963 ad sales</div>
+    </div>
+    <div style="overflow-x:auto;"><table><thead><tr><th>#</th><th>Search Term</th><th>Spend</th><th>% of Spend</th><th>Sales</th><th>% of Sales</th><th>Orders</th><th>CVR</th><th>ACoS</th><th>ROAS</th><th>Action</th></tr></thead><tbody id="nbCB"></tbody></table></div>
+  </div>
+  <div id="cont-camp" class="tc"><div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;"><div style="background:#6c63ff15;border:1px solid #6c63ff30;border-radius:7px;padding:5px 11px;font-size:15px;color:#c5c7d4;">Top 3 DEF campaigns = <b style="color:#fff;">45.6% of spend → 57.0% of sales</b></div></div><div style="overflow-x:auto;"><table><thead><tr><th>#</th><th>Campaign</th><th>Type</th><th>Spend</th><th>% Spend</th><th>Sales</th><th>% Sales</th><th>Orders</th><th>ACoS</th><th>ROAS</th><th>Status</th></tr></thead><tbody id="campCB"></tbody></table></div></div>
+  <div id="cont-prod" class="tc"><div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;"><div style="background:#6c63ff15;border:1px solid #6c63ff30;border-radius:7px;padding:5px 11px;font-size:15px;color:#c5c7d4;">Total revenue base: <b style="color:#fff;">$404,148</b> · Total ad spend: <b style="color:#fff;">$60,516</b></div></div><div style="overflow-x:auto;"><table><thead><tr><th>ASIN</th><th>Product</th><th>Ad Spend</th><th>% Spend</th><th>Ad Sales</th><th>% Ad Sales</th><th>Total Rev</th><th>% Total Rev</th><th>TACoS</th><th>Orders</th></tr></thead><tbody id="prodCB"></tbody></table></div></div>
+</div>
+
+<!-- ORGANIC IMPACT -->
+<div class="card" style="margin-bottom:20px;">
+  <h3>🌱 Organic Impact — Keyword Rank Changes (Feb → March 2026) <span style="background:#22c55e22;color:#22c55e;font-size:11px;padding:3px 9px;border-radius:7px;font-weight:600;margin-left:6px;">Source: Helium 10 Keyword Tracker</span></h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px;">
+    <div style="background:#22c55e10;border:1px solid #22c55e25;border-radius:9px;padding:14px 16px;">
+      <div style="font-size:11px;color:#22c55e;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">🔥 Biggest Organic Wins</div>
+      <div style="font-size:13px;color:#d4d6e8;line-height:2.1;">
+        <span style="color:#22c55e;font-weight:700;">kids toothpaste</span> (SV 133K) — Vanilla Frosting: <b>p29 → p24</b> | Fresh Mint: <b>p245 → p67</b> 🚀<br>
+        <span style="color:#22c55e;font-weight:700;">hydroxyapatite toothpaste</span> (SV 118K) — Vanilla: <b>p56 → p20</b> | Fresh Mint: <b>p71 → p38</b><br>
+        <span style="color:#22c55e;font-weight:700;">toothpaste</span> (SV 1.1M) — Vanilla Frosting: <b>p183 → p85</b> (+98 positions)<br>
+        <span style="color:#22c55e;font-weight:700;">hydroxyapatite mouthwash</span> (SV 3.9K) — Mouthwash Mint: <b>#1 held</b> ✅<br>
+        <span style="color:#22c55e;font-weight:700;">remineralizing mouthwash</span> (SV 2.2K) — Mouthwash Mint: <b>#1 → #2</b> (still top 3)<br>
+        <span style="color:#22c55e;font-weight:700;">mouthwash</span> (SV 425K) — Mouthwash Mint: <b>p200 → p125</b> (+75) 🚀
+      </div>
+    </div>
+    <div style="background:#ef444410;border:1px solid #ef444425;border-radius:9px;padding:14px 16px;">
+      <div style="font-size:11px;color:#ef4444;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">⚠️ Rank Drops to Watch</div>
+      <div style="font-size:13px;color:#d4d6e8;line-height:2.1;">
+        <span style="color:#ef4444;font-weight:700;">non toxic toothpaste</span> (SV 5.5K) — Fresh Mint: <b>p27 → p41</b> (−14)<br>
+        <span style="color:#ef4444;font-weight:700;">natural mouthwash</span> (SV 3.9K) — Mouthwash Mint: <b>p34 → p57</b> (−23)<br>
+        <span style="color:#ef4444;font-weight:700;">toddler toothpaste</span> (SV 42K) — Vanilla: <b>p29 → p36</b> (−7)<br>
+        <span style="color:#ef4444;font-weight:700;">kids toothpaste fluoride free</span> (SV 1.6K) — Sweet Orange: <b>p22 → p52</b> (−30) ⚠️<br>
+        <span style="color:#ef4444;font-weight:700;">boka toothpaste</span> (SV 133K) — Vanilla: <b>p33 → p44</b> (−11)<br>
+        <span style="color:#ef4444;font-weight:700;">baby toothpaste</span> (SV 36K) — Vanilla: <b>p31 → p46</b> (−15)
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs" id="organicTabs">
+    <button class="tab active" onclick="orgTab('tp')">🦷 Toothpaste Rankings</button>
+    <button class="tab" onclick="orgTab('mw')">💧 Mouthwash Rankings</button>
+  </div>
+
+  <div id="org-tp" class="tc active">
+    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+      <div style="background:#6c63ff15;border:1px solid #6c63ff30;border-radius:7px;padding:5px 12px;font-size:12px;color:#c5c7d4;">Top keywords ranked in top 30 organically · Feb → March · <b style="color:#fff;">Source: Helium 10</b></div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>ASIN</th><th>Keyword</th><th>Search Vol</th><th>Feb Rank</th><th>Mar Rank</th><th>Change</th><th>Sponsored</th><th>Signal</th></tr></thead>
+        <tbody id="orgTpBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="org-mw" class="tc">
+    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+      <div style="background:#6c63ff15;border:1px solid #6c63ff30;border-radius:7px;padding:5px 12px;font-size:12px;color:#c5c7d4;">Mouthwash line ranking dominance in its category · Feb → March · <b style="color:#fff;">Source: Helium 10</b></div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>ASIN</th><th>Keyword</th><th>Search Vol</th><th>Feb Rank</th><th>Mar Rank</th><th>Change</th><th>Sponsored</th><th>Signal</th></tr></thead>
+        <tbody id="orgMwBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- WHAT'S WORKING / NOT WORKING / WHAT'S NEXT -->
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;">
+
+  <!-- WHAT'S WORKING -->
+  <div style="background:#1a1d27;border:1px solid #22c55e33;border-radius:12px;overflow:hidden;">
+    <div style="background:#22c55e14;padding:14px 18px;border-bottom:1px solid #22c55e25;">
+      <div style="font-size:17px;font-weight:700;color:#22c55e;">✅ What's Working</div>
+      <div style="font-size:13px;color:#6b7280;margin-top:2px;">Protect the budget here</div>
+    </div>
+    <div style="padding:16px 18px;display:flex;flex-direction:column;gap:11px;">
+
+      <!-- INTERNAL -->
+      <div class="internal-only" style="display:flex;flex-direction:column;gap:11px;">
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">Branded campaigns are carrying the account</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">The branded KW campaign is generating 32.8% of all ad sales on 16.3% of spend — 5.03x ROAS. This is the engine. Don't reduce budget here.</div>
+        </div>
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">Mouthwash search demand is accelerating</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">"happy tooth mouthwash" — 67.3% CVR, 9.7% ACoS, 10.36x ROAS. Held #1 organic for "hydroxyapatite mouthwash" all month. Revenue +352% YoY. This line is sticking.</div>
+        </div>
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">Fresh Mint is the most efficient ASIN in the catalog</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">$123K total revenue at 11.1% TACoS and 70.2% session CVR. Uses 22.7% of spend, drives 30.4% of total revenue. It's punching above its weight — probably underfunded.</div>
+        </div>
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">Organic ranks improving on big terms</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">"kids toothpaste" (133K SV): Vanilla p29→p24, Fresh Mint p245→p67. "hydroxyapatite toothpaste" (118K SV): Vanilla p56→p20. The brand is climbing organically — ads are working.</div>
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">Revenue growing faster than sessions</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">+21.5% sessions drove +70.2% revenue YoY. The catalog converts better than it did a year ago — that's listing strength and brand equity compounding.</div>
+        </div>
+      </div>
+
+      <!-- CLIENT -->
+      <div class="client-only" style="flex-direction:column;gap:11px;">
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">Brand search is converting exceptionally well</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">Customers searching for Happy Tooth by name are converting at 55–67% — well above industry average. That's real brand equity showing up in the data.</div>
+        </div>
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">Mouthwash is becoming a real category player</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">Revenue grew 352% year-over-year and the line is now ranking #1 organically for core mouthwash terms. The investment is paying off.</div>
+        </div>
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">Organic rankings are improving on high-volume terms</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">The account is climbing organically on terms like "kids toothpaste" and "hydroxyapatite toothpaste" — which means every dollar of ad spend is also building long-term organic visibility.</div>
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">Revenue is growing faster than traffic</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">Sessions grew 21% year-over-year but revenue grew 70%. The catalog is converting better — a strong signal that listing quality and brand recognition are improving.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WHAT'S NOT WORKING -->
+  <div style="background:#1a1d27;border:1px solid #ef444433;border-radius:12px;overflow:hidden;">
+    <div style="background:#ef444412;padding:14px 18px;border-bottom:1px solid #ef444425;">
+      <div style="font-size:17px;font-weight:700;color:#ef4444;">🔴 What's Not Working</div>
+      <div style="font-size:13px;color:#6b7280;margin-top:2px;">Fix or investigate before next audit</div>
+    </div>
+    <div style="padding:16px 18px;display:flex;flex-direction:column;gap:11px;">
+
+      <!-- INTERNAL -->
+      <div class="internal-only" style="display:flex;flex-direction:column;gap:11px;">
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">🔴 Duplicate Boka PT — pause today</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">"MINT TP | OFF | PT | COMPETITOR | BOKA" is a duplicate. 133.8% ACoS, 0.75x ROAS, $543/month in pure waste. There is no reason this campaign is running.</div>
+        </div>
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">🔴 All Products Auto — structural bleed</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">8+ months running. $4,506 in March at 73.7% ACoS. This is ~$50K/year equivalent. It needs a full search term scrub or a shutdown decision — not another month of monitoring.</div>
+        </div>
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">⚠️ Mint Brownie — listing issue, not a bid issue</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">15.0% session CVR and 73.5% ACoS. Both signals — organic and paid — point at the listing itself. Check images, pricing, and reviews before adjusting any bids.</div>
+        </div>
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">⚠️ Lemon Twist spend spiked without a return</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">Spend went from $299 → $1,814 MoM (+507%). ROAS dropped to 1.70x, ACoS at 58.8%. Too much budget moved too fast on a new ASIN. Tighten targeting before adding more spend.</div>
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">⚠️ TACoS above target — Big Spring Sale impact</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">Full-month TACoS hit 15.0% vs. 13% target. The sale week (Mar 25–31) at $16K spend is the main driver. Pre-sale baseline was 12.6% — on target. Expect normalization in April.</div>
+        </div>
+      </div>
+
+      <!-- CLIENT -->
+      <div class="client-only" style="flex-direction:column;gap:11px;">
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">A few campaigns need efficiency improvements</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">We've identified specific campaigns that are spending above acceptable thresholds with limited returns. We're addressing these in April with targeted pauses and bid adjustments.</div>
+        </div>
+        <div style="border-bottom:1px solid #1f2235;padding-bottom:11px;">
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">Mint Brownie needs a listing review</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">Conversion rate on this product is lower than the rest of the catalog. The data points to a listing issue rather than an ad issue — we'll review images, pricing, and reviews together.</div>
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:5px;">Overall ad efficiency dipped in March — expected</div>
+          <div style="font-size:14px;color:#9ca3af;line-height:1.65;">The Big Spring Sale and several new campaign launches both ran in March. Both events temporarily elevate ACoS — that's normal. The underlying pre-sale metrics were on target.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WHAT'S NEXT -->
+  <div style="background:#1a1d27;border:1px solid #6c63ff33;border-radius:12px;overflow:hidden;">
+    <div style="background:#6c63ff14;padding:14px 18px;border-bottom:1px solid #6c63ff25;">
+      <div style="font-size:17px;font-weight:700;color:#6c63ff;">⚡ What's Next</div>
+      <div style="font-size:13px;color:#6b7280;margin-top:2px;">April priority plan</div>
+    </div>
+    <div style="padding:16px 18px;display:flex;flex-direction:column;gap:9px;">
+
+      <!-- INTERNAL -->
+      <div class="internal-only" style="display:flex;flex-direction:column;gap:9px;">
+        <div style="background:#ef444410;border-left:3px solid #ef4444;border-radius:6px;padding:10px 12px;">
+          <div style="font-size:13px;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">This Week</div>
+          <div style="font-size:14px;color:#d4d6e8;line-height:1.7;">① Pause Boka PT duplicate — $543/mo recovered<br>② Pull Mint Brownie listing — images, price, reviews<br>③ Cut Lemon Twist loose match bids 15–20%</div>
+        </div>
+        <div style="background:#f59e0b10;border-left:3px solid #f59e0b;border-radius:6px;padding:10px 12px;">
+          <div style="font-size:13px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">This Month</div>
+          <div style="font-size:14px;color:#d4d6e8;line-height:1.7;">① Scrub All Products Auto search terms — add negatives or pause<br>② Build exact campaigns for: "hydroxyapatite mouthwash" · "yellow teeth stain remover kids" · "toothpaste kids" · "remineralizing mouthwash"<br>③ Read kids TP Broad campaigns April 25 — keep or cut<br>④ Read competitor PT expansion April 23</div>
+        </div>
+        <div style="background:#6c63ff12;border-left:3px solid #6c63ff;border-radius:6px;padding:10px 12px;">
+          <div style="font-size:13px;font-weight:700;color:#6c63ff;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">🚩 Flag for Leadership</div>
+          <div style="font-size:14px;color:#d4d6e8;line-height:1.7;">All Products Auto Low Bid — ~$50K/yr at 73% ACoS. Decision needed: full scrub or shut down and reallocate.</div>
+        </div>
+      </div>
+
+      <!-- CLIENT -->
+      <div class="client-only" style="flex-direction:column;gap:10px;">
+        <div style="background:#22c55e0e;border-left:3px solid #22c55e;border-radius:6px;padding:10px 12px;">
+          <div style="font-size:13px;font-weight:700;color:#22c55e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Scaling What's Working</div>
+          <div style="font-size:14px;color:#d4d6e8;line-height:1.7;">Building dedicated campaigns for the mouthwash search terms showing strong demand. Expanding on the organic keyword gains with targeted ad support.</div>
+        </div>
+        <div style="background:#f59e0b10;border-left:3px solid #f59e0b;border-radius:6px;padding:10px 12px;">
+          <div style="font-size:13px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Improving Efficiency</div>
+          <div style="font-size:14px;color:#d4d6e8;line-height:1.7;">Pausing underperforming placements and tightening bids on campaigns that spent above target in March. Expect TACoS to return toward 13% in April as sale-week effects normalize.</div>
+        </div>
+        <div style="background:#6c63ff12;border-left:3px solid #6c63ff;border-radius:6px;padding:10px 12px;">
+          <div style="font-size:13px;font-weight:700;color:#6c63ff;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">New Campaigns — Read Dates</div>
+          <div style="font-size:14px;color:#d4d6e8;line-height:1.7;">Several new campaigns launched in March are still in their learning phase. We'll have full performance reads by late April and will optimize or cut based on the data.</div>
+        </div>
+        <div style="background:#3b82f610;border-left:3px solid #3b82f6;border-radius:6px;padding:10px 12px;">
+          <div style="font-size:13px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Listing Review</div>
+          <div style="font-size:14px;color:#d4d6e8;line-height:1.7;">Reviewing the Mint Brownie listing together — images, pricing, and reviews. Improving the listing will have a bigger impact than any ad change on this product.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+</div>
+<script>
+Chart.defaults.color='#8b8fa8';
+Chart.defaults.borderColor='#2a2d3e';
+
+function sw(g,n){
+  document.querySelectorAll('[id^="'+g+'-"]').forEach(e=>e.classList.remove('active'));
+  document.getElementById(g+'-'+n).classList.add('active');
+  const par=document.getElementById(g+'-'+n).closest('.card');
+  const tabs=par.querySelectorAll('.tab');
+  const maps={mom:['sp','ef','vo'],wow:['sp','ef']};
+  const i=maps[g].indexOf(n);
+  tabs.forEach((t,j)=>t.classList.toggle('active',j===i));
+}
+function setView(v){
+  document.getElementById('dash').classList.toggle('view-client',v==='client');
+  document.getElementById('btnC').classList.toggle('active',v==='client');
+  document.getElementById('btnI').classList.toggle('active',v==='internal');
+}
+
+// ── ORGANIC RANK TAB SWITCHER ──
+function orgTab(n){
+  ['tp','mw'].forEach(id=>document.getElementById('org-'+id).classList.remove('active'));
+  document.getElementById('org-'+n).classList.add('active');
+  document.querySelectorAll('#organicTabs .tab').forEach((t,i)=>t.classList.toggle('active',(['tp','mw'][i])===n));
+}
+
+// ── TOOTHPASTE ORGANIC RANKS ──
+// [asin_short, keyword, sv, feb, mar, sponsored]
+const orgTp = [
+  // Vanilla Frosting - top performers
+  ["Vanilla Frosting","kids toothpaste hydroxyapatite","526",null,2,"1"],
+  ["Vanilla Frosting","hydroxyapatite toothpaste kids","4066",5,2,"7"],
+  ["Vanilla Frosting","kids hydroxyapatite toothpaste","-",6,2,">96"],
+  ["Vanilla Frosting","yellow teeth stain remover kids","526",null,1,">96"],
+  ["Vanilla Frosting","kids whitening toothpaste","2168",3,3,">96"],
+  ["Vanilla Frosting","vanilla toothpaste","1371",3,3,"7"],
+  ["Vanilla Frosting","boka kids","3859",8,4,">96"],
+  ["Vanilla Frosting","hydroxyapatite toothpaste","117703",56,20,">96"],
+  ["Vanilla Frosting","kids toothpaste","133277",29,24,"8"],
+  ["Vanilla Frosting","toothpaste","1098788",183,85,">96"],
+  ["Vanilla Frosting","toothpaste without fluoride","1893",156,31,">96"],
+  ["Vanilla Frosting","wellnesse toothpaste","2168",205,17,">96"],
+  ["Vanilla Frosting","boka kids toothpaste","6076",9,11,">96"],
+  ["Vanilla Frosting","kids toothpaste no fluoride","4078",15,11,"6"],
+  ["Vanilla Frosting","toothpaste for toddlers 1-3","5782",37,30,"11"],
+  // Fresh Mint - top performers
+  ["Fresh Mint","kids toothpaste","133277",245,67,"11"],
+  ["Fresh Mint","hydroxyapatite toothpaste","117703",71,38,">96"],
+  ["Fresh Mint","kids mint toothpaste","2866",14,6,"1"],
+  ["Fresh Mint","fluoride free toothpaste kids","9267",29,22,"4"],
+  ["Fresh Mint","lumineux toothpaste","10423",217,21,">96"],
+  ["Fresh Mint","wellnesse toothpaste","2168",22,13,">96"],
+  ["Fresh Mint","micro hydroxyapatite toothpaste","1171",5,3,">96"],
+  ["Fresh Mint","hydroxyapatite-toothpaste","4068",212,81,"8"],
+  // Sweet Orange
+  ["Sweet Orange","non-nano hydroxyapatite toothpaste","308",null,1,"2"],
+  ["Sweet Orange","orange toothpaste","839",null,5,">96"],
+  ["Sweet Orange","kids fluoride free toothpaste","3429",15,11,">96"],
+  ["Sweet Orange","fluoride free toothpaste kids","9654",44,18,">96"],
+  ["Sweet Orange","toddler toothpaste","41361",28,25,">96"],
+  ["Sweet Orange","non fluoride toothpaste","4721",64,33,">96"],
+  // Lemon Twist
+  ["Lemon Twist","lemon toothpaste","628",null,7,">96"],
+  // Mint Brownie
+  ["Mint Brownie","chocolate toothpaste","1861",18,9,">96"],
+];
+
+function rankChip(feb, mar){
+  if(feb===null) return `<span class="pill pp">NEW</span>`;
+  const d = feb - mar;
+  if(d > 10) return `<span class="pill pg">+${d} ↑↑</span>`;
+  if(d > 0)  return `<span class="pill pg">+${d} ↑</span>`;
+  if(d === 0) return `<span class="pill pb">Held</span>`;
+  if(d > -10) return `<span class="pill py">${d} ↓</span>`;
+  return `<span class="pill pr">${d} ↓↓</span>`;
+}
+function rankClass(r){ 
+  if(r<=3) return 'style="color:#22c55e;font-weight:700;"';
+  if(r<=10) return 'style="color:#f59e0b;font-weight:600;"';
+  return 'style=""';
+}
+function fmtSV(sv){
+  if(sv===null||sv===undefined||sv===0||sv==='0'||sv==='-'||sv==='') return '—';
+  const n = parseInt(String(sv).replace(/,/g,'').replace(/[^0-9]/g,''));
+  return isNaN(n)||n===0 ? '—' : n.toLocaleString();
+}
+function sigChip(feb, mar, sv){
+  const svn = parseInt(String(sv||'0').replace(/,/g,'').replace(/[^0-9]/g,'')) || 0;
+  if(feb===null) return `<span class="pill pp">New entry</span>`;
+  const d = feb - mar;
+  if(d > 50 && svn > 10000) return `<span class="pill pg">🚀 Major gain</span>`;
+  if(d > 20) return `<span class="pill pg">Strong gain</span>`;
+  if(d > 5 && mar <= 10) return `<span class="pill pg">Top 10 ✅</span>`;
+  if(d < -20) return `<span class="pill pr">⚠️ Slipping</span>`;
+  if(d < -10) return `<span class="pill py">Watch</span>`;
+  return `<span class="pill pb">Stable</span>`;
+}
+function buildOrgRow([asin,kw,sv,feb,mar,sp]){
+  return `<tr>
+  <td style="font-size:12px;font-weight:600;white-space:normal;min-width:130px;">${asin}</td>
+  <td style="white-space:normal;min-width:220px;">${kw}</td>
+  <td style="color:#8b8fa8;">${fmtSV(sv)}</td>
+  <td style="color:#8b8fa8;">${feb===null?'—':feb}</td>
+  <td ${rankClass(mar)}>${mar}</td>
+  <td>${rankChip(feb,mar)}</td>
+  <td style="color:#8b8fa8;">${sp}</td>
+  <td>${sigChip(feb,mar,sv)}</td>
+</tr>`;
+}
+document.getElementById('orgTpBody').innerHTML = orgTp.map(buildOrgRow).join('');
+// ── MOUTHWASH ORGANIC RANKS ──
+const orgMw = [
+  ["Mouthwash Mint","hydroxyapatite mouthwash","3865",1,1,">96"],
+  ["Mouthwash Mint","remineralizing mouthwash","2155",1,2,"8"],
+  ["Mouthwash Mint","mouthwash hydroxyapatite","368",1,2,"2"],
+  ["Mouthwash Mint","nano hydroxyapatite mouthwash","1869",2,3,"9"],
+  ["Mouthwash Mint","ollie mouthwash","516",5,3,">96"],
+  ["Mouthwash Mint","non toxic mouthwash","1586",11,4,"43"],
+  ["Mouthwash Mint","fluoride free mouthwash","2643",null,7,"12"],
+  ["Mouthwash Mint","boka mouthwash","2864",null,10,">96"],
+  ["Mouthwash Mint","silver mouthwash","2528",45,35,">96"],
+  ["Mouthwash Mint","mouthwash","425394",200,125,">96"],
+  ["Mouthwash Mint","natural mouthwash","3869",34,57,">96"],
+  ["Mouthwash Mint","mouth wash","60317",null,92,">96"],
+  ["Mouthwash Mint","mouthwashes","10429",null,92,"2"],
+  ["Mouthwash Mint","antibacterial mouthwash","4854",null,99,">96"],
+  ["Mouthwash Mint","mouth wash for adults","42526",null,109,">96"],
+  ["Mouthwash Orange","hydroxyapatite mouthwash kids","253",null,1,"2"],
+  ["Mouthwash Orange","kids hydroxyapatite mouthwash","0",null,1,"3"],
+  ["Mouthwash Orange","orange mouthwash","388",null,2,">96"],
+  ["Mouthwash Orange","fluoride free mouthwash kids","568",null,4,">96"],
+  ["Mouthwash Orange","kids fluoride free mouthwash","758",null,4,">96"],
+  ["Mouthwash Orange","kids mouthwash fluoride free","993",null,7,">96"],
+  ["Mouthwash Orange","kids mouthwash","29209",null,25,">96"],
+  ["Mouthwash Orange","mouthwash","425394",132,120,"14"],
+];
+document.getElementById('orgMwBody').innerHTML = orgMw.map(buildOrgRow).join('');
+
+// ── END ORGANIC IMPACT ──
+
+function contTab(n){
+  ['branded','nb','camp','prod'].forEach(id=>{
+    const el=document.getElementById('cont-'+id);
+    if(el) el.classList.remove('active');
+  });
+  const target=document.getElementById('cont-'+n);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('#contribTabs .tab').forEach((t,i)=>
+    t.classList.toggle('active',(['branded','nb','camp','prod'][i])===n));
+}
+
+// ── TOP 20 BRANDED SEARCH TERMS ──
+const brandedData=[
+  ["happy tooth toothpaste",21.84,32.98,3517,58.5,26.5,3.77,"Scale","pg"],
+  ["happy tooth",6.07,10.31,1061,52.4,23.6,4.24,"Scale","pg"],
+  ["happy tooth mouthwash",0.9,3.73,301,67.3,9.7,10.36,"🔥 Star — Scale","pg"],
+  ["happy tooth toothpaste kids",1.7,2.75,311,58.7,24.8,4.03,"Scale","pg"],
+  ["happy teeth toothpaste",0.84,0.91,91,51.7,37.0,2.71,"Hold","pb"],
+  ["happy toothpaste",0.26,0.6,63,59.4,17.4,5.74,"Scale","pg"],
+  ["happy teeth",0.28,0.6,57,62.6,18.8,5.32,"Scale","pg"],
+  ["happytooth toothpaste",0.31,0.55,60,42.5,23.0,4.35,"Hold","pb"],
+  ["happy tooth kids",0.41,0.42,42,48.8,38.8,2.58,"Hold","pb"],
+  ["happy tooth hydroxyapatite toothpaste",0.1,0.21,25,58.1,18.7,5.35,"Scale","pg"],
+  ["toothpaste happy tooth",0.05,0.21,23,74.2,9.5,10.53,"Scale","pg"],
+  ["happy tooth toothpaste adults",0.01,0.12,12,171.4,3.2,31.36,"Scale","pg"],
+  ["happy tooth whitening strips",0.04,0.11,7,116.7,12.8,7.84,"Scale","pg"],
+  ["happytooth toothpaste kids",0.09,0.1,12,52.2,35.3,2.83,"Hold","pb"],
+  ["happy tooth toothpaste strawberry",0.01,0.06,8,80.0,8.7,11.55,"Scale","pg"],
+  ["happy tooth mint",0.04,0.06,6,66.7,25.5,3.92,"Hold","pb"],
+  ["happy tooth toothpaste 3 pack",0.01,0.05,6,100.0,10.9,9.13,"Scale","pg"],
+  ["happy tooth mouthwash kids",0.02,0.05,5,166.7,12.8,7.78,"Scale","pg"],
+  ["happy tooth vanilla",0.03,0.05,5,83.3,19.9,5.04,"Scale","pg"],
+  ["happy tooth mineral toothpaste",0.01,0.04,6,100.0,7.8,12.8,"Scale","pg"]
+];
+const rowHTML=(d,i)=>`<tr>
+  <td style="color:#6b7280;font-size:15px;">${i+1}</td>
+  <td style="font-size:14px;">${d[0]}</td>
+  <td>$${(d[1]*60516/100).toFixed(0)}</td>
+  <td><div style="display:flex;align-items:center;gap:4px;"><div style="background:#6c63ff;height:5px;border-radius:3px;width:${Math.min(d[1]*3,100)}%;min-width:2px;"></div><span style="font-size:14px;color:#8b8fa8;">${d[1]}%</span></div></td>
+  <td>$${(d[2]*150963/100).toFixed(0)}</td>
+  <td><div style="display:flex;align-items:center;gap:4px;"><div style="background:#22c55e;height:5px;border-radius:3px;width:${Math.min(d[2]*3,100)}%;min-width:2px;"></div><span style="font-size:14px;color:#8b8fa8;">${d[2]}%</span></div></td>
+  <td>${d[3].toLocaleString()}</td><td>${d[4]}%</td>
+  <td><span class="pill ${d[5]<=40?'pg':d[5]<=60?'py':'pr'}">${d[5]}%</span></td>
+  <td>${d[6]}x</td>
+  <td><span class="pill ${d[8]}">${d[7]}</span></td></tr>`;
+document.getElementById('brandedCB').innerHTML = brandedData.map(rowHTML).join('');
+
+// ── TOP 25 NON-BRANDED SEARCH TERMS ──
+const nbData=[
+  ["hydroxyapatite mouthwash",2.04,2.09,162,32.0,39.0,2.56,"→ Harvest to Exact","pp"],
+  ["toothpaste",2.68,1.88,202,34.8,57.0,1.75,"Reduce bid","py"],
+  ["hydroxyapatite toothpaste",1.84,1.29,146,25.2,57.4,1.74,"Reduce bid","py"],
+  ["kids toothpaste",1.62,1.14,134,29.5,57.2,1.75,"Monitor campaigns","py"],
+  ["mouthwash",1.32,1.14,82,32.7,46.5,2.15,"Hold","pb"],
+  ["nano hydroxyapatite mouthwash",0.95,0.75,61,24.1,51.1,1.96,"Reduce bid","py"],
+  ["risewell kids toothpaste",0.41,0.26,30,28.3,64.9,1.54,"Reduce bid","py"],
+  ["hydroxyapatite toothpaste kids",0.46,0.24,30,21.1,75.3,1.33,"Negative candidate","pr"],
+  ["nano hydroxyapatite toothpaste",0.51,0.22,26,14.0,91.0,1.1,"Heavy cut / Pause","pr"],
+  ["risewell toothpaste",0.28,0.2,24,34.8,56.1,1.78,"Reduce bid","py"],
+  ["remineralizing mouthwash",0.2,0.2,17,28.8,41.6,2.4,"→ Harvest to Exact","pp"],
+  ["kids hydroxyapatite toothpaste",0.17,0.17,20,31.8,40.1,2.49,"→ Harvest to Exact","pp"],
+  ["kids whitening toothpaste",0.22,0.16,21,28.8,53.3,1.87,"→ Harvest to Exact","pp"],
+  ["fluoride free toothpaste kids",0.19,0.15,18,29.0,50.6,1.98,"Hold","pb"],
+  ["yellow teeth stain remover kids",0.09,0.14,17,30.9,27.9,3.59,"💎 Scale — gem","pg"],
+  ["kids toothpaste hydroxyapatite",0.17,0.14,17,37.0,51.2,1.95,"→ Harvest to Exact","pp"],
+  ["toothpaste kids",0.06,0.14,15,57.7,16.9,5.91,"🔥 Scale — efficient","pg"],
+  ["ollie toothpaste",0.22,0.13,15,21.4,67.3,1.49,"Reduce bid","py"],
+  ["vanilla toothpaste",0.13,0.11,13,23.6,48.5,2.06,"→ Harvest to Exact","pp"],
+  ["kids toothpaste no fluoride",0.15,0.11,13,27.7,57.4,1.74,"Hold","pb"],
+  ["tooth paste",0.03,0.1,9,69.2,13.3,7.53,"🔥 Scale — efficient","pg"],
+  ["fluoride free toothpaste",0.25,0.08,11,18.0,118.4,0.84,"Pause","pr"],
+  ["boka toothpaste",0.12,0.08,10,24.4,58.1,1.72,"Hold","pb"],
+  ["hello toothpaste",0.08,0.08,9,29.0,43.5,2.3,"Hold","pb"],
+  ["remineralizing toothpaste",0.13,0.08,9,19.6,62.1,1.61,"Reduce bid","py"]
+];
+document.getElementById('nbCB').innerHTML = nbData.map(rowHTML).join('');
+
+// ── CAMPAIGN CONTRIBUTION DATA ──
+const campContrib=[
+  ["All TP | SP | DEF | KW | Branded Terms","DEF",9850,16.3,49532,32.8,3559,19.9,5.03,"green"],
+  ["CATALOG | SP | DEF | PT | AMC Cart Abandoners","DEF",11096,18.3,20937,13.9,1537,53.0,1.89,"yellow"],
+  ["All TP | SB | DEF | KW | Branded Terms","DEF",6679,11.0,15559,10.3,1100,42.9,2.33,"yellow"],
+  ["MINT MOUTHWASH | DEF | KW | PHRASE | Branded","DEF",2739,4.5,11299,7.5,644,24.2,4.13,"green"],
+  ["ALL PRODUCTS | OFF | AUTO | Low Bid Harvesting","AUTO",4705,7.8,6383,4.2,462,73.7,1.36,"red"],
+  ["CATALOG | OFF | AUTO | Catch All","AUTO",1747,2.9,3488,2.3,259,50.1,2.0,"yellow"],
+  ["VANILLA TP | OFF | PT | Competitor ASINs","OFF",1720,2.8,2857,1.9,222,60.2,1.66,"yellow"],
+  ["VANILLA TP | OFF | KW | EXACT | Dominate Terms","OFF",1929,3.2,2663,1.8,201,72.4,1.38,"red"],
+  ["MINT MOUTHWASH | OFF | CAT | Mouthwashes","OFF",1985,3.3,2741,1.8,156,72.4,1.38,"red"],
+  ["Sweet Orange TP | OFF | Auto | Data Harvesting","AUTO",1993,3.3,2700,1.8,207,73.8,1.36,"red"],
+  ["Mouthwash | OFF | KW | Hydroxyapatite MW","OFF",1272,2.1,2603,1.7,140,48.9,2.05,"green"],
+  ["MINT MOUTHWASH | OFF | PT | Competitor ASINs","OFF",1136,1.9,2193,1.5,116,51.8,1.93,"yellow"],
+  ["TP | OFF | PT | dr jens hydroxyapatite","OFF",1001,1.7,2243,1.5,190,44.6,2.24,"green"],
+  ["Mint MW | HYPER TARGET | hydroxyapatite mw","OFF",832,1.4,1827,1.2,90,45.6,2.2,"green"],
+  ["MINT TP | OFF | PT | BOKA TOOTHPASTE","OFF",1200,2.0,1694,1.1,130,70.9,1.41,"red"],
+  ["Mint MW | HYPER TARGET | mouthwash","OFF",733,1.2,1666,1.1,78,44.0,2.27,"green"],
+  ["MINT TP | OFF | PT | EXACT | Competitor ASINs","OFF",550,0.9,1438,1.0,112,38.2,2.62,"green"],
+  ["TP | OFF | PT | RiseWell Competitors","OFF",1007,1.7,1189,0.8,95,84.7,1.18,"red"],
+  ["WHITENING STRIPS | DEF | PT | Mint TP ASIN","DEF",518,0.9,838,0.6,41,61.9,1.62,"red"],
+  ["MINT TP | OFF | PT | BOKA (DUPLICATE) 🔴","OFF",543,0.9,406,0.3,32,133.8,0.75,"red"]
+];
+const typeClass={"DEF":"pb","OFF":"py","AUTO":"pp"};
+document.getElementById('campCB').innerHTML = campContrib.map(([name,type,spend,spPct,sales,saPct,orders,acos,roas,st],i)=>`
+<tr><td style="color:#6b7280;font-size:15px;">${i+1}</td>
+<td style="font-size:13px;max-width:280px;white-space:normal;">${name}</td>
+<td><span class="pill ${typeClass[type]}">${type}</span></td>
+<td>$${spend.toLocaleString()}</td>
+<td><div style="display:flex;align-items:center;gap:5px;"><div style="background:#6c63ff;height:6px;border-radius:3px;width:${Math.min(spPct*4,100)}%;min-width:2px;"></div><span style="font-size:14px;color:#8b8fa8;">${spPct}%</span></div></td>
+<td>$${sales.toLocaleString()}</td>
+<td><div style="display:flex;align-items:center;gap:5px;"><div style="background:#22c55e;height:6px;border-radius:3px;width:${Math.min(saPct*4,100)}%;min-width:2px;"></div><span style="font-size:14px;color:#8b8fa8;">${saPct}%</span></div></td>
+<td>${orders.toLocaleString()}</td>
+<td><span class="pill ${st==='green'?'pg':st==='yellow'?'py':'pr'}">${acos}%</span></td>
+<td>${roas}x</td>
+<td><span class="pill ${st==='green'?'pg':st==='yellow'?'py':'pr'}">${st==='green'?'✅ Target':st==='yellow'?'⚠️ Watch':'🔴 Review'}</span></td></tr>`).join('');
+
+// ── PRODUCT CONTRIBUTION DATA ──
+const prodContribData=[
+  ["B0CJK57PQ7","Vanilla Frosting TP 3.4oz",21724,35.9,50075,33.2,115960,28.7,18.7,3794],
+  ["B0CJK2WKDN","Fresh Mint TP 4.0oz",13707,22.7,45194,29.9,123012,30.4,11.1,3225],
+  ["B0D2S64V1L","Mouthwash Fresh Mint 20oz",10414,17.2,26396,17.5,70015,17.3,14.9,1450],
+  ["B0CLX2B8BT","Sweet Orange TP 4oz",7779,12.9,17069,11.3,55475,13.7,14.0,1254],
+  ["B0DQ6BL5SN","Mouthwash Sweet Orange 20oz",2911,4.8,5866,3.9,19741,4.9,14.7,346],
+  ["B0FY49PRHL","Lemon Twist TP 3.4oz",1814,3.0,3084,2.0,8391,2.1,21.6,255],
+  ["B0CJK598G8","Whitening Kit 28 Strips",1165,1.9,1930,1.3,4828,1.2,24.1,101],
+  ["B0DNV74MP4","Mint Brownie TP 3.4oz",1001,1.7,1362,0.9,6726,1.7,14.9,108]
+];
+document.getElementById('prodCB').innerHTML = prodContribData.map(([asin,name,spend,spPct,adSales,saPct,totRev,trPct,tacos,orders])=>`
+<tr>
+<td style="font-size:14px;font-family:monospace;color:#6b7280;">${asin}</td>
+<td style="font-size:14px;font-weight:600;">${name}</td>
+<td>$${spend.toLocaleString()}</td>
+<td><div style="display:flex;align-items:center;gap:5px;"><div style="background:#6c63ff;height:6px;border-radius:3px;width:${Math.min(spPct*2.5,100)}%;min-width:2px;"></div><span style="font-size:14px;color:#8b8fa8;">${spPct}%</span></div></td>
+<td>$${adSales.toLocaleString()}</td>
+<td><div style="display:flex;align-items:center;gap:5px;"><div style="background:#22c55e;height:6px;border-radius:3px;width:${Math.min(saPct*2.5,100)}%;min-width:2px;"></div><span style="font-size:14px;color:#8b8fa8;">${saPct}%</span></div></td>
+<td><strong>$${totRev.toLocaleString()}</strong></td>
+<td><div style="display:flex;align-items:center;gap:5px;"><div style="background:#f59e0b;height:6px;border-radius:3px;width:${Math.min(trPct*2.5,100)}%;min-width:2px;"></div><span style="font-size:14px;color:#8b8fa8;">${trPct}%</span></div></td>
+<td><span class="pill ${tacos<=13?'pg':tacos<=18?'py':'pr'}">${tacos}%</span></td>
+<td>${orders.toLocaleString()}</td></tr>`).join('');
+
+
+// ── END CONTRIBUTION TABLES ──
+
+
+const toplineData = [
+  {asin:'B0CJK2WKDN', name:'Fresh Mint TP 4oz',        totalRev:123012, adSales:45194, adSpend:13707, febCVR:66.7, marCVR:70.2, buybox:99.7},
+  {asin:'B0CJK57PQ7', name:'Vanilla Frosting TP 3.4oz', totalRev:115960, adSales:50075, adSpend:21724, febCVR:44.0, marCVR:50.4, buybox:99.8},
+  {asin:'B0D2S64V1L', name:'Mouthwash Mint 20oz',       totalRev: 70015, adSales:26396, adSpend:10414, febCVR:41.7, marCVR:45.0, buybox:99.5},
+  {asin:'B0CLX2B8BT', name:'Sweet Orange TP 4oz',       totalRev: 55475, adSales:17069, adSpend: 7779, febCVR:51.9, marCVR:53.0, buybox:99.7},
+  {asin:'B0DQ6BL5SN', name:'Mouthwash Orange 20oz',     totalRev: 19741, adSales: 5866, adSpend: 2911, febCVR:28.3, marCVR:27.3, buybox:99.8},
+  {asin:'B0FY49PRHL', name:'Lemon Twist TP 3.4oz',      totalRev:  8391, adSales: 3084, adSpend: 1814, febCVR:14.6, marCVR:17.5, buybox:99.8},
+  {asin:'B0DNV74MP4', name:'Mint Brownie TP 3.4oz',     totalRev:  6726, adSales: 1362, adSpend: 1001, febCVR:15.8, marCVR:15.0, buybox:99.8},
+  {asin:'B0CJK598G8', name:'Whitening Kit 28 Strips',   totalRev:  4828, adSales: 1930, adSpend: 1165, febCVR:13.7, marCVR:18.0, buybox:99.8},
+];
+const tlNames = toplineData.map(d=>d.name);
+
+// Total Revenue bar
+new Chart(document.getElementById('cTopRev'),{type:'bar',data:{labels:tlNames,datasets:[{label:'Total Revenue',data:toplineData.map(d=>d.totalRev),backgroundColor:'#6c63ff',borderRadius:4}]},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>'$'+Math.round(v/1000)+'K'}}}}});
+
+// Organic vs Paid stacked
+new Chart(document.getElementById('cOrgPaid'),{type:'bar',data:{labels:tlNames,datasets:[{label:'Organic',data:toplineData.map(d=>d.totalRev-d.adSales),backgroundColor:'#22c55e',borderRadius:0},{label:'Paid (Ad Sales)',data:toplineData.map(d=>d.adSales),backgroundColor:'#6c63ff',borderRadius:4}]},options:{indexAxis:'y',plugins:{legend:{position:'top'}},scales:{x:{stacked:true,ticks:{callback:v=>'$'+Math.round(v/1000)+'K'}},y:{stacked:true}}}});
+
+// TACoS bar
+const tacosVals = toplineData.map(d=>+(d.adSpend/d.totalRev*100).toFixed(1));
+new Chart(document.getElementById('cTacos'),{type:'bar',data:{labels:tlNames,datasets:[{label:'TACoS %',data:tacosVals,backgroundColor:tacosVals.map(v=>v<=13?'#22c55e':v<=18?'#f59e0b':'#ef4444'),borderRadius:4},{label:'Target (13%)',data:tacosVals.map(()=>13),type:'line',borderColor:'#6c63ff',borderDash:[5,5],pointRadius:0,borderWidth:2}]},options:{plugins:{legend:{position:'top'}},scales:{y:{title:{display:true,text:'TACoS %'}}}}});
+
+// ── YOY TABLE DATA ──
+// [name, asin, r25, r26, s25, s26, u25, u26, cvr25, cvr26, sp25, sp26, roas25, roas26, tacos25, tacos26]
+
+
+// ── YOY TABLE — full matching columns ──
+const asinYoy = [
+  ["B0CJK2WKDN","Fresh Mint TP 4.0oz",
+   13707.26,45194.25,123012.18,77817.93,11.1,30.3,3.30,70.2,45.3,99.68,1.93,3225,
+   2018.97,9873.19,69457.92,2.9,20.4,4.89,56.1,39.9,99.90,1.06,758],
+  ["B0CJK57PQ7","Vanilla Frosting TP 3.4oz",
+   21724.44,50075.47,115960.20,65884.73,18.7,43.4,2.31,50.4,35.0,99.75,2.00,3794,
+   12519.09,56553.79,96734.88,12.9,22.1,4.52,35.1,36.9,99.87,1.00,4633],
+  ["B0D2S64V1L","Mouthwash Mint 20oz",
+   10414.08,26396.03,70015.00,43618.97,14.9,39.5,2.53,45.0,36.5,99.47,2.62,1450,
+   0.00,0.00,15504.00,0.0,0.0,0.00,36.9,0.0,94.32,0.00,0],
+  ["B0CLX2B8BT","Sweet Orange TP 4oz",
+   7779.02,17068.58,55474.80,38406.22,14.0,45.6,2.19,53.0,38.7,99.74,2.40,1254,
+   1721.28,7624.31,40155.84,4.3,22.6,4.43,39.6,35.6,99.90,1.02,603],
+  ["B0DQ6BL5SN","Mouthwash Orange 20oz",
+   2910.61,5865.75,19741.00,13875.25,14.7,49.6,2.02,27.3,26.0,99.84,2.19,346,
+   0.00,0.00,5662.00,0.0,0.0,0.00,20.5,0.0,99.94,0.00,0],
+  ["B0FY49PRHL","Lemon Twist TP 3.4oz",
+   1814.12,3083.90,8390.79,5306.89,21.6,58.8,1.70,17.5,26.5,99.80,1.89,255,
+   0.00,0.00,0.00,0.0,0.0,0.00,0.0,0.0,0.00,0.00,0],
+  ["B0DNV74MP4","Mint Brownie TP 3.4oz",
+   1001.44,1362.37,6725.97,5363.60,14.9,73.5,1.36,15.0,15.3,99.75,1.42,108,
+   234.83,588.00,5880.00,4.0,39.9,2.50,11.5,15.7,99.34,0.74,50],
+  ["B0CJK598G8","Whitening Kit 28 Strips",
+   1165.44,1929.82,4828.00,2898.18,24.1,60.4,1.66,18.0,32.6,99.78,3.76,101,
+   279.71,1480.00,4046.00,6.9,18.9,5.29,17.0,45.6,99.63,1.66,77],
+];
+function yoyPct(cur,prev,lb=false){
+  if(prev===0) return cur>0?`<span class="pill pp">NEW</span>`:`<span class="pill pb">—</span>`;
+  const p=(cur-prev)/prev*100, ok=lb?p<0:p>0;
+  return `<span class="pill ${ok?'pg':Math.abs(p)<5?'pb':'pr'}">${p>=0?'+':''}${Math.round(p)}%</span>`;
+}
+function yoyPp(cur,prev,lb=false){
+  if(prev===0&&cur===0) return `<span class="pill pb">—</span>`;
+  const d=cur-prev, ok=lb?d<0:d>0;
+  return `<span class="pill ${ok?'pg':Math.abs(d)<2?'pb':'pr'}">${d>=0?'+':''}${d.toFixed(1)}pp</span>`;
+}
+function fmt$(v){return v===0?'—':'$'+Math.round(v).toLocaleString();}
+function fmtP(v){return v===0?'—':v.toFixed(1)+'%';}
+function fmtX(v){return v===0?'—':v.toFixed(2)+'x';}
+document.getElementById('yoyTableBody').innerHTML=asinYoy.map(([asin,name,
+  mSp,mAS,mTR,mOS,mTC,mAC,mRO,mSC,mACV,mBB,mCPC,mOR,
+  fSp,fAS,fTR,fTC,fAC,fRO,fSC,fACV,fBB,fCPC,fOR])=>{
+  const mOS2=mTR-mAS;
+  const fOS=fTR-fAS;
+  const orgPct=(mOS2/mTR*100).toFixed(0);
+  const yoyTag=(cur,prev,lb=false,isAbs=false)=>{
+    if(prev===0) return cur>0?`<span class="pill pp" style="font-size:15px;">NEW</span>`:`<span style="color:#6b7280;">—</span>`;
+    const delta=cur-prev;
+    const pct=delta/prev*100;
+    const ok=lb?delta<0:delta>0;
+    const cls=ok?'pg':Math.abs(pct)<3?'pb':'pr';
+    const sign=delta>=0?'+':'';
+    const disp=isAbs?`${sign}${delta.toFixed(1)}pp`:`${sign}${Math.round(pct)}%`;
+    return `<span class="pill ${cls}" style="font-size:15px;">${disp}</span>`;
+  };
+  return `<tr>
+    <td style="min-width:170px;white-space:normal;word-break:break-word;"><div style="font-size:14px;font-weight:600;">${name}</div><div style="font-size:15px;color:#6b7280;font-family:monospace;">${asin}</div></td>
+    <td>${fmt$(mTR)}</td><td>${yoyTag(mTR,fTR)}</td>
+    <td>${fmt$(mSp)}</td><td>${yoyTag(mSp,fSp,true)}</td>
+    <td>${fmt$(mAS)}</td><td>${yoyTag(mAS,fAS)}</td>
+    <td>${fmt$(mOS2)}</td><td style="color:#8b8fa8;">${orgPct}%</td>
+    <td><span class="pill ${mTC<=13?'pg':mTC<=18?'py':'pr'}">${mTC.toFixed(1)}%</span></td><td>${yoyTag(mTC,fTC,true,true)}</td>
+    <td><span class="pill ${mAC<=40?'pg':mAC<=55?'py':'pr'}">${mAC.toFixed(1)}%</span></td><td>${yoyTag(mAC,fAC,true,true)}</td>
+    <td>${mRO.toFixed(2)}x</td><td>${yoyTag(mRO,fRO)}</td>
+    <td>${mSC.toFixed(1)}%</td><td>${yoyTag(mSC,fSC,false,true)}</td>
+    <td>${mACV.toFixed(1)}%</td><td>${yoyTag(mACV,fACV,false,true)}</td>
+    <td>${Math.round(mOR).toLocaleString()}</td><td>${yoyTag(mOR,fOR)}</td>
+    <td>$${mCPC.toFixed(2)}</td><td>${yoyTag(mCPC,fCPC,true)}</td>
+    <td>${mBB.toFixed(1)}%</td>
+  </tr>`;}).join('');
+
+// ── FULL ASIN MOM TABLE DATA ──
+// [asin, name, marSpend, marAdSales, marTotRev, marOrgSales, marTacos, marAcos, marRoas, marSessCvr, marAdCvr, marBuybox, marCpc, marOrders,
+//              febSpend, febAdSales, febTotRev,              febTacos, febAcos, febRoas, febSessCvr, febAdCvr, febBuybox, febCpc, febOrders]
+const asinMom = [
+  ["B0CJK2WKDN","Fresh Mint TP 4oz",       13707,45194,123012,77818, 11.1,30.3,3.30,70.2,45.3,99.68,1.93,3225,  11125,44512,115832, 9.6,25.0,4.00,66.7,45.0,99.88,1.62,3089],
+  ["B0CJK57PQ7","Vanilla Frosting TP 3.4oz",21724,50075,115960,65885, 18.7,43.4,2.31,50.4,35.0,99.75,2.00,3794,  18796,56465,109921,17.1,33.3,3.00,44.0,34.6,99.96,1.53,4247],
+  ["B0D2S64V1L","Mouthwash Mint 20oz",       10414,26396, 70015,43619, 14.9,39.5,2.53,45.0,36.5,99.47,2.62,1450,   9491,29111, 68153,13.9,32.6,3.07,41.7,38.2,99.56,2.27,1600],
+  ["B0CLX2B8BT","Sweet Orange TP 4oz",        7779,17069, 55475,38406, 14.0,45.6,2.19,53.0,38.7,99.74,2.40,1254,   5022,14724, 49934,10.1,34.1,2.93,51.9,42.5,100.0,2.03,1048],
+  ["B0DQ6BL5SN","Mouthwash Orange 20oz",       2911, 5866, 19741,13875, 14.7,49.6,2.02,27.3,26.0,99.84,2.19, 346,   1674, 5160, 18468, 9.1,32.5,3.08,28.3,28.6,99.82,1.52, 315],
+  ["B0FY49PRHL","Lemon Twist TP 3.4oz",        1814, 3084,  8391, 5307, 21.6,58.8,1.70,17.5,26.5,99.80,1.89, 255,    299,  984,  5923, 5.0,30.4,3.29,14.6,37.6,99.94,1.61,  70],
+  ["B0DNV74MP4","Mint Brownie TP 3.4oz",        1001, 1362,  6726, 5364, 14.9,73.5,1.36,15.0,15.3,99.75,1.42, 108,    124,  312,  6274, 2.0,39.7,2.52,15.8,15.8,99.97,0.78,  25],
+  ["B0CJK598G8","Whitening Kit 28 Strips",      1165, 1930,  4828, 2898, 24.1,60.4,1.66,18.0,32.6,99.78,3.76, 101,   1248, 3446,  5270,23.7,36.2,2.76,13.7,41.6,100.0,3.27, 159],
+];
+
+function momTag(marVal, febVal, lowerIsBetter=false, isAbs=false){
+  const delta = marVal - febVal;
+  const pctChg = febVal !== 0 ? (delta/febVal*100) : 0;
+  const improved = lowerIsBetter ? delta < 0 : delta > 0;
+  const cls = improved ? 'pg' : (Math.abs(pctChg) < 3 ? 'pb' : 'pr');
+  const sign = delta >= 0 ? '+' : '';
+  const disp = isAbs ? `${sign}${delta.toFixed(1)}pp` : `${sign}${pctChg.toFixed(0)}%`;
+  return `<span class="pill ${cls}" style="font-size:15px;">${disp}</span>`;
+}
+function fmtMom$(v){return '$'+Math.round(v).toLocaleString();}
+function fmtMomPct(v){return v.toFixed(1)+'%';}
+
+document.getElementById('toplineTableBody').innerHTML = asinMom.map(d=>{
+  const [asin,name,
+    mSp,mAS,mTR,mOS,mTC,mAC,mRO,mSC,mACV,mBB,mCPC,mOR,
+    fSp,fAS,fTR,   fTC,fAC,fRO,fSC,fACV,fBB,fCPC,fOR] = d;
+  const orgPct = (mOS/mTR*100).toFixed(0);
+  return `<tr>
+    <td style="min-width:170px;white-space:normal;word-break:break-word;"><div style="font-size:14px;font-weight:600;">${name}</div><div style="font-size:15px;color:#6b7280;font-family:monospace;">${asin}</div></td>
+    <td>${fmt$(mTR)}</td><td>${momTag(mTR,fTR)}</td>
+    <td>${fmt$(mSp)}</td><td>${momTag(mSp,fSp,true)}</td>
+    <td>${fmt$(mAS)}</td><td>${momTag(mAS,fAS)}</td>
+    <td>${fmt$(mOS)}</td><td style="color:#8b8fa8;">${orgPct}%</td>
+    <td><span class="pill ${mTC<=13?'pg':mTC<=18?'py':'pr'}">${fmtMomPct(mTC)}</span></td><td>${momTag(mTC,fTC,true,true)}</td>
+    <td><span class="pill ${mAC<=40?'pg':mAC<=55?'py':'pr'}">${fmtMomPct(mAC)}</span></td><td>${momTag(mAC,fAC,true,true)}</td>
+    <td>${mRO.toFixed(2)}x</td><td>${momTag(mRO,fRO)}</td>
+    <td>${fmtMomPct(mSC)}</td><td>${momTag(mSC,fSC,false,true)}</td>
+    <td>${fmtMomPct(mACV)}</td><td>${momTag(mACV,fACV,false,true)}</td>
+    <td>${Math.round(mOR).toLocaleString()}</td><td>${momTag(mOR,fOR)}</td>
+    <td>$${mCPC.toFixed(2)}</td><td>${momTag(mCPC,fCPC,true)}</td>
+    <td>${fmtMomPct(mBB)}</td>
+  </tr>`;
+}).join('');
+
+// ── END TOPLINE ──
+
+const K=v=>'$'+Math.round(v/1000)+'K';
+new Chart(document.getElementById('cMS'),{type:'bar',data:{labels:['February','March'],datasets:[{label:'Spend',data:[47779,60516],backgroundColor:['#6c63ff88','#6c63ff'],borderRadius:5},{label:'Sales',data:[154714,150976],backgroundColor:['#22c55e88','#22c55e'],borderRadius:5}]},options:{plugins:{legend:{position:'top'}},scales:{y:{ticks:{callback:K}}}}});
+new Chart(document.getElementById('cME'),{type:'bar',data:{labels:['February','March'],datasets:[{label:'ACoS %',data:[30.88,40.08],backgroundColor:['#22c55e','#f59e0b'],borderRadius:5,yAxisID:'y'},{label:'ROAS',data:[3.24,2.49],backgroundColor:['#3b82f688','#f59e0b88'],borderRadius:5,yAxisID:'y2'}]},options:{plugins:{legend:{position:'top'}},scales:{y:{title:{display:true,text:'ACoS %'}},y2:{position:'right',title:{display:true,text:'ROAS'}}}}});
+new Chart(document.getElementById('cMV'),{type:'bar',data:{labels:['February','March'],datasets:[{label:'Orders',data:[10104,10233],backgroundColor:['#6c63ff88','#6c63ff'],borderRadius:5,yAxisID:'y'},{label:'CPC ($)',data:[1.73,2.13],backgroundColor:['#22c55e','#f59e0b'],borderRadius:5,yAxisID:'y2'}]},options:{plugins:{legend:{position:'top'}},scales:{y:{},y2:{position:'right'}}}});
+new Chart(document.getElementById('cWS'),{type:'bar',data:{labels:['Pre-Sale (Mar 18–24)','🏷️ Sale Week (Mar 25–31)'],datasets:[{label:'Spend',data:[6857,16263],backgroundColor:['#6c63ff88','#f59e0b'],borderRadius:5},{label:'Sales',data:[27761,33900],backgroundColor:['#22c55e88','#22c55e'],borderRadius:5}]},options:{plugins:{legend:{position:'top'}},scales:{y:{ticks:{callback:K}}}}});
+new Chart(document.getElementById('cWE'),{type:'bar',data:{labels:['Pre-Sale (Mar 18–24)','🏷️ Sale Week (Mar 25–31)'],datasets:[{label:'ACoS %',data:[24.7,48.0],backgroundColor:['#22c55e','#f59e0b'],borderRadius:5,yAxisID:'y'},{label:'ROAS',data:[4.05,2.08],backgroundColor:['#3b82f688','#f59e0b88'],borderRadius:5,yAxisID:'y2'}]},options:{plugins:{legend:{position:'top'}},scales:{y:{title:{display:true,text:'ACoS %'}},y2:{position:'right',title:{display:true,text:'ROAS'}}}}});
+
+const products=[
+  {asin:'B0CJK2WKDN',name:'Fresh Mint Toothpaste 4oz',spend:13707,sales:45194,acos:30.33,roas:3.30,cvr:45.3,orders:3225,st:'green',sl:'On Target',note:'Top performer. Best ROAS, highest CVR, efficient at scale. Protect this budget.'},
+  {asin:'B0CJK57PQ7',name:'Vanilla Frosting Toothpaste 3.4oz',spend:21724,sales:50075,acos:43.38,roas:2.31,cvr:35.0,orders:3794,st:'yellow',sl:'Watch',note:'Highest spend and revenue. ROAS just below 2.5x. Watch CPC ($2.00 avg) — any inflation will pressure ROAS.'},
+  {asin:'B0D2S64V1L',name:'Mouthwash Mint 20 fl oz',spend:10414,sales:26396,acos:39.45,roas:2.53,cvr:36.5,orders:1450,st:'green',sl:'On Target',note:'On target. Mouthwash line growing — branded search demand accelerating. Scale carefully as new TOS campaigns mature.'},
+  {asin:'B0CLX2B8BT',name:'Sweet Orange Toothpaste 4oz',spend:7779,sales:17069,acos:45.58,roas:2.19,cvr:38.7,orders:1254,st:'yellow',sl:'Watch',note:'Slightly under ROAS target. CVR strong at 38.7% — issue is CPC ($2.40 avg), not the listing. Bid reductions on broad/auto should fix this.'},
+  {asin:'B0DQ6BL5SN',name:'Mouthwash Orange 20 fl oz',spend:2911,sales:5866,acos:49.62,roas:2.02,cvr:26.0,orders:346,st:'yellow',sl:'Watch',note:'Below ROAS target. CVR at 26% is acceptable. Review placements driving spend and reduce bids on lowest-performing ones.'},
+  {asin:'B0FY49PRHL',name:'Lemon Twist Toothpaste 3.4oz',spend:1814,sales:3084,acos:58.83,roas:1.70,cvr:26.5,orders:255,st:'red',sl:'Investigate',note:'Significantly below ROAS target. CVR at 26.5% is okay — bid/placement issue. Reduce bids and tighten targeting.'},
+  {asin:'B0CJK598G8',name:'Whitening Kit 28 Strips',spend:1165,sales:1930,acos:60.39,roas:1.66,cvr:32.6,orders:101,st:'red',sl:'Investigate',note:'60+ days old, below target. CVR at 32.6% is decent — problem is overbidding. Pull back bids across placements.'},
+  {asin:'B0DNV74MP4',name:'Mint Brownie Toothpaste 3.4oz',spend:1001,sales:1362,acos:73.51,roas:1.36,cvr:15.3,orders:108,st:'red',sl:'⚠️ Listing Issue',note:'Worst performer. CVR 15.3% = likely listing health issue (images, price, reviews). Investigate listing BEFORE cutting bids.'},
+];
+const ico={green:'✅',yellow:'⚠️',red:'🔴'};
+const pc={green:'pg',yellow:'py',red:'pr'};
+document.getElementById('prodList').innerHTML=products.map(p=>`
+<div class="pr-row">
+  <div class="pr-ico">${ico[p.st]}</div>
+  <div class="pr-info">
+    <div class="pr-name">${p.name}</div>
+    <div class="pr-asin">${p.asin}</div>
+    <div class="pr-chips">
+      <div class="chip"><span>Spend</span>$${p.spend.toLocaleString()}</div>
+      <div class="chip"><span>Sales</span>$${p.sales.toLocaleString()}</div>
+      <div class="chip"><span>ACoS</span><span class="pill ${pc[p.st]}">${p.acos}%</span></div>
+      <div class="chip"><span>ROAS</span>${p.roas}x</div>
+      <div class="chip"><span>CVR</span>${p.cvr}%</div>
+      <div class="chip"><span>Orders</span>${p.orders.toLocaleString()}</div>
+      <span class="pill ${pc[p.st]}">${p.sl}</span>
+    </div>
+    <div class="pr-note internal-only">${p.note}</div>
+  </div>
+</div>`).join('');
+
+const asinNames=products.map(p=>p.name);
+const asinAcos=products.map(p=>p.acos);
+const asinColors=asinAcos.map(v=>v<=40?'#22c55e':v<=55?'#f59e0b':'#ef4444');
+new Chart(document.getElementById('cAsin'),{type:'bar',data:{labels:asinNames,datasets:[{label:'ACoS %',data:asinAcos,backgroundColor:asinColors,borderRadius:4},{label:'Target 40%',data:asinAcos.map(()=>40),type:'line',borderColor:'#6c63ff',borderDash:[5,5],pointRadius:0,borderWidth:2}]},options:{indexAxis:'y',plugins:{legend:{position:'top'}},scales:{x:{max:80,title:{display:true,text:'ACoS %'}}}}});
+</script>
+</body>
+</html>
